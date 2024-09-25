@@ -8,11 +8,14 @@ export default {
     extend: {
       colors: {
         primary: {
-          dark: '#783FE0',
+          dark: '#1E1E1E',
         },
         secondary: {
-          dark: '#1A1A1A',
+          dark: '#8C929C',
         },
+        purple: {
+          dark: "#783FE0"
+        }
       },
     },
   },

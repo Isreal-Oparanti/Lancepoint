@@ -47,7 +47,7 @@ exports.login = async function (req, res) {
   const { usernameOrEmail, password } = req.body;
 
   try {
-    // Use a single query to find a user by either username or email
+     
     const user = await UserModel.findOne({
       $or: [{ username: usernameOrEmail }, { email: usernameOrEmail }]
     });
