@@ -34,7 +34,7 @@ const Login = () => {
       localStorage.setItem('token', token);
 
       // Set auth state with user info
-      setAuth(user);
+      setAuth({user: user});
 
       toast.success('Login Successful!');
       

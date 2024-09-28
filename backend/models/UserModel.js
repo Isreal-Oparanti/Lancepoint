@@ -27,8 +27,11 @@ const UserSchema = new Schema({
     description: { // Corrected spelling from 'discription' to 'description'
         type: String,
     },
-    // Add other fields as necessary
-}, {
+    skills: [],
+
+    jobs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Job' }]
+}, 
+{
     timestamps: true
 });
 

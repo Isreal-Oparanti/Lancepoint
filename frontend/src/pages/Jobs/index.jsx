@@ -24,7 +24,7 @@ function Job() {
   return (
     <div className="flex">
       <SideNav /> 
-      <div className="p-6 flex-1 ml-[220px]">
+      <div className="p-6 flex-1 ml-[220px] min-h-screen">
         <Navbar />
         {jobs.length > 0 ? (
           jobs.map((user, id) => (

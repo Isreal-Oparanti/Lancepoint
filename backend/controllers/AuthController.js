@@ -96,31 +96,31 @@ exports.login = async function (req, res) {
  
 
 // Update user information
+// Controller for updating user data
 exports.updateUser = async (req, res) => {
   try {
-    // Assuming userId is sent in the request
-    const {userId, skills, description } = req.body;
-    
+    const { userId, skills, description } = req.body;
+
     // Find the user by their ID
     const user = await UserModel.findById(userId);
-     
+
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Update user fields
-    if (skills) {
-      user.skills = skills;
-    }
-    console.log(description)
-    if (description) {
-      console.log('hi')
+    // Update description
+    if (description !== undefined) {
       user.description = description;
+    }
+
+    // Handle skills update (overwrite or merge depending on frontend logic)
+    if (skills) {
+      user.skills = skills; // This will overwrite the entire skills array. Handle accordingly from the frontend
     }
 
     // Save updated user data
     const updatedUser = await user.save();
-    console.log(updatedUser)
+
     // Send updated user info back to the frontend
     res.status(200).json(updatedUser);
   } catch (error) {

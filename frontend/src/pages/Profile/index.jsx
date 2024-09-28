@@ -8,15 +8,18 @@ const Profile = () => {
   const { auth, setAuth } = useContext(AuthContext); // Fetch user info from auth context
   const [editMode, setEditMode] = useState(false);
   const [newSkill, setNewSkill] = useState("");
-  const [updatedSkills, setUpdatedSkills] = useState(auth.user.skills || []);
-  const [description, setDescription] = useState(auth.user.description || ""); // Initialize description state
-  const userId = auth.user._id
+  
+  // Set fallback values to prevent undefined errors
+  const [updatedSkills, setUpdatedSkills] = useState(auth?.user?.skills || []);
+  const [description, setDescription] = useState(auth?.user?.description || ""); 
+  const userId = auth?.user?._id;
+
   useEffect(() => {
-    // Ensure that the updated skills and description are synced with the user info in auth context
-    if (auth?.user.skills) {
+    // Sync auth context skills and description
+    if (auth?.user?.skills) {
       setUpdatedSkills(auth.user.skills);
     }
-    if (auth?.description) {
+    if (auth?.user?.description) {
       setDescription(auth.user.description);
     }
   }, [auth]);
@@ -26,26 +29,32 @@ const Profile = () => {
   };
 
   const handleAddSkill = () => {
-    if (newSkill.trim() !== "") {
+    if (newSkill.trim() !== "" && !updatedSkills.includes(newSkill)) {
       setUpdatedSkills([...updatedSkills, newSkill]);
-      setNewSkill("");
+      setNewSkill(""); // Clear input after adding skill
     }
+  };
+
+  const handleRemoveSkill = (skillToRemove) => {
+    const filteredSkills = updatedSkills.filter(skill => skill !== skillToRemove);
+    setUpdatedSkills(filteredSkills); // Update state with filtered skills
   };
 
   const handleSave = async () => {
     try {
-      const updatedUser = {userId, skills: updatedSkills, description}; // Add description to updated user info
+      const updatedUser = { userId, skills: updatedSkills, description }; // Add description to updated user info
 
       // Save updated user info to the server
       const response = await axios.put("http://localhost:5000/api/update", updatedUser);
 
       const newData = response.data;
-        console.log(newData)
+      console.log(newData);
+
       // Update the auth context with updated user info
-      setAuth({user: newData});
+      setAuth({ user: newData });
 
       // Update the local storage with updated user info
-      localStorage.setItem('user', JSON.stringify(newData));
+      localStorage.setItem("user", JSON.stringify(newData));
 
       // Exit edit mode
       setEditMode(false);
@@ -55,12 +64,11 @@ const Profile = () => {
   };
 
   return (
-    <div className='flex min-h-screen'>
-        <SideNav />
-     
-      <div className='p-6 flex-1 ml-[220px]'>
-       
-      <Navbar />
+    <div className="flex min-h-screen">
+      <SideNav />
+
+      <div className="p-6 flex-1 ml-[220px]">
+        <Navbar />
         <div className="w-[80%] ml-20 border-1 rounded-xl p-6 bg-primary-dark text-white mt-5">
           <div className="flex justify-between items-center mb-4">
             <h1 className="text-3xl font-bold">Profile</h1>
@@ -70,8 +78,8 @@ const Profile = () => {
           </div>
 
           <div className="p-4 rounded-lg shadow ">
-            <h2 className="text-2xl font-semibold">{auth.user.firstname + " " + auth.user.lastname }</h2>
-            <p>{auth.user.email}</p>
+            <h2 className="text-2xl font-semibold">{auth?.user?.firstname + " " + auth?.user?.lastname}</h2>
+            <p>{auth?.user?.email}</p>
 
             <div className="mt-4">
               <h3 className="text-xl font-semibold">Description</h3>
@@ -89,7 +97,7 @@ const Profile = () => {
             </div>
 
             <div className="mt-4">
-              <h3 className="text-xl font-semibold">Skills </h3>
+              <h3 className="text-xl font-semibold">Skills</h3>
               {!editMode ? (
                 <div className="flex flex-wrap gap-2">
                   {updatedSkills.map((skill, index) => (
@@ -111,7 +119,15 @@ const Profile = () => {
 
                   <div className="flex flex-wrap gap-2 mt-2">
                     {updatedSkills.map((skill, index) => (
-                      <span key={index} className="bg-purple-600 px-2  rounded text-sm">{skill}</span>
+                      <span key={index} className="bg-purple-600 px-2 rounded text-sm">
+                        {skill}
+                        <button
+                          className="ml-2 text-red-500"
+                          onClick={() => handleRemoveSkill(skill)}
+                        >
+                          x
+                        </button>
+                      </span>
                     ))}
                   </div>
                 </div>

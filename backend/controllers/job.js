@@ -1,40 +1,47 @@
-const bcrypt = require('bcrypt');
 const Job = require('../models/job.js');
- 
- /** Middleware for verifying user */
+const User = require('../models/UserModel.js'); // Assuming you have a User model
 
- 
- 
+exports.createJob = async function (req, res) {
+  const { jobTitle, tags, price, description, amount, startDate, endDate, userId } = req.body;
 
- exports.createJob = async function (req, res) {
-   // Extract job details from request body
-   const { jobTitle, tags, price, description, token, amount } = req.body;
- 
-   // Create a new job instance
-   const newJob = new Job({
-     jobTitle,
-     tags,
-     price,
-     description,
-     token,
-     amount
-   });
- 
-   try {
-     // Save the new job to the database
-     const savedJob = await newJob.save();
- 
-     // Return a response with the saved job details
-     res.status(201).json(savedJob);
-   } catch (err) {
-     // Handle errors
-     console.error(err);
-     res.status(500).json({ error: 'Failed to create job' });
-   }
- };
- 
+  if (!userId) {
+    return res.status(400).json({ error: "User ID is required" });
+  }
 
- 
+  try {
+    // Find the user by their ID
+    const user = await User.findById(userId);
+    
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Create a new job instance
+    const newJob = new Job({
+      jobTitle,
+      tags,
+      price,
+      description,
+      amount,
+      startDate,
+      endDate,
+      createdBy: userId
+    });
+
+    // Save the new job to the database
+    const savedJob = await newJob.save();
+
+    // Update the user's jobs array
+    user.jobs.push(savedJob._id);
+    await user.save();
+
+    // Return a response with the saved job
+    res.status(201).json(savedJob);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to create job' });
+  }
+};
 
 exports.getAllJobs = async function (req, res) {
   try {
