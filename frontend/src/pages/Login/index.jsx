@@ -1,112 +1,101 @@
-import React,{ useState } from "react";
- 
-import signUpImage from "../../assets/2.jpeg" 
-import signUpImage1 from "../../assets/1.jpeg" 
-import { Link } from "react-router-dom";
-
+import React, { useState, useContext } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import signUpImage from "../../assets/2.jpeg"; 
+import { AuthContext } from "../../context/auth";
 
-// import { server } from "../../server";
- 
-
-
-//Button  component
- 
 const Login = () => {
-  // const [firstname, setFirstname] = useState('');
-  // const [lastname, setLastname] = useState('');
+  const { auth, setAuth } = useContext(AuthContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate(); // For navigation after successful login
+
   const handleFormSubmit = async (event) => {
     event.preventDefault();
+    setError(''); // Reset error message
 
-  //   try {
-  //     // Send request to backend
-  //     const response = await axios.post('/api/signup', { username });
-  //     console.log('Signup successful:', response.data);
-  //     // Handle successful signup response here
-  //   } catch (error) {
-  //     console.error('Signup failed:', error.response.data);
-  //     // Handle signup failure here
-  //   }
-  }
+    if (!email || !password) {
+      setError('Please fill in all fields.');
+      toast.error('Please fill in all fields.');
+      return;
+    }
 
-  const connectWallet = async () => {
-    if (window.ethereum) { // Check if Metamask is installed
-      try {
-        // Request access to the user's MetaMask account
-        await window.ethereum.request({ method: 'eth_requestAccounts' });
-        // Metamask is connected, handle further actions here
-        console.log('Metamask connected');
-      } catch (error) {
-        console.error('Error connecting Metamask:', error);
-        // Handle error
-      }
-    } else {
-      console.error('Metamask not installed');
-      // Handle Metamask not installed
+    try {
+      const response = await axios.post('http://localhost:5000/api/login', { email, password });
+
+      // Get user data and token from response
+      const { user, token } = response.data;
+
+      // Save user data and token in localStorage
+      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('token', token);
+
+      // Set auth state with user info
+      setAuth(user);
+
+      toast.success('Login Successful!');
+      
+      // Redirect to profile page after successful login
+      navigate('/profile');
+    } catch (error) {
+      setError(error.response?.data?.message || 'Login failed. Please try again.');
+      toast.error(error.response?.data?.message || 'Login failed. Please try again.');
     }
   };
 
-    return(
-        <>
-            <div id="container" className="flex flex-row justify-center w-full ">
-                <div className="flex-1  bg-primary-dark">
-                    <p className="font-bold text-white mt-4 p-2">
-                      LOGO
-                    </p>
-                    
-                    <div className="bg-opacity-10 mt-10 flex justify-center bg-secondary-dark bg-blur  py-8 mx-auto shadow rounded-[20px] px-4 w-[45%] relative border-2 border-stone-700">
-      <form onSubmit={handleFormSubmit} className="flex flex-col justify-center space-y-4 rounded-lg w-full mt-2">
-        <div className="text-white mt-7 text-center">Login</div>
-        
-        {/* First Name and Last Name */}
-         
-        {/* Email Input */}
-        <div className="mt-1 w-full">
-          <input
-            type="email"
-            name="email"
-            placeholder="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="appearance-none placeholder:text-slate-400 text-slate-300 bg-slate-700 block w-full px-3 py-2 rounded-xlg rounded-md shadow-sm placeholder-gray-400 w-full focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-          />
-        </div>
-    
-        {/* Password Input */}
-        <div className="mt-1 w-full">
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="appearance-none placeholder:text-slate-400 text-slate-300 bg-slate-700 block w-full px-3 py-2 rounded-xlg rounded-md shadow-sm placeholder-gray-400 w-full focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-          />
-        </div>
-    
-         
-        {/* Sign Up Button */}
-        <div className="flex justify-center">
-          <button type="submit" className="bg-purple-dark text-white py-1 px-3 w-full text-sm rounded-full">
-            <Link to={'/home'}>Login</Link>
-          </button>
+  return (
+    <>
+      <ToastContainer />
+      <div id="container" className="flex flex-col lg:flex-row justify-center w-full min-h-screen">
+        {/* Left Side - Form */}
+        <div className="flex-1 bg-primary-dark flex flex-col items-center justify-center p-4">
+          <div className="bg-opacity-10 mt-10 flex justify-center bg-secondary-dark py-8 mx-auto shadow rounded-lg px-4 w-full max-w-md relative border-2 border-stone-700">
+            <form onSubmit={handleFormSubmit} className="flex flex-col justify-center space-y-4 w-full">
+              <div className="text-white mt-2 text-center text-xl font-semibold">Login</div>
+
+              {error && <div className="text-red-500 text-center">{error}</div>}
+
+              {/* Email Input */}
+              <input
+                type="email"
+                name="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="appearance-none placeholder:text-slate-400 text-slate-300 bg-slate-700 block w-full px-3 py-2 rounded-md shadow-sm"
+              />
+
+              {/* Password Input */}
+              <input
+                type="password"
+                name="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="appearance-none placeholder:text-slate-400 text-slate-300 bg-slate-700 block w-full px-3 py-2 rounded-md shadow-sm"
+              />
+
+              <button type="submit" className="bg-purple-700 text-white py-2 px-4 w-full text-sm rounded-full hover:bg-purple-800 transition">
+                Login
+              </button>
+            </form>
+          </div>
+
+          <div className='text-white mt-4 mx-auto text-center'>
+            Don't have an account? <Link to='/' className="text-blue-400 hover:underline">Sign Up</Link>
+          </div>
         </div>
 
-      </form>
-      
-    </div>
-                      <div className='text-white mt-1 mx-auto text-center'>Do you have an account yet?  <Link to={'/'}> SIGN UP</Link></div>       
-                    </div>
-                <div className="Signupimage flex-1 bg-green-100">
-                {/* <img src={signUpImage1}  className="h-full -z-10 absolute" alt="signUpImage1" /> */}
-                  <img src={signUpImage}  className="h-full w-full z-20" alt="signUpImage" />
-                </div>
-            </div>
-            
-        </>
-    )
+        {/* Right Side - Image */}
+        <div className="hidden lg:flex flex-1">
+          <img src={signUpImage} className="object-cover w-full h-full" alt="Login" />
+        </div>
+      </div>
+    </>
+  );
 };
 
 export default Login;

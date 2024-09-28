@@ -10,6 +10,9 @@ import SignUp from './pages/SignUp';
 import Home from './pages/HomePage';
 import CreateGig from './pages/CreateJobs';
 import Jobs from './pages/Jobs';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Profile from './pages/Profile';
  //** */ auth Middleware ///
  
 
@@ -50,8 +53,12 @@ function App() {
              <Route path="/home" element={<Home/>} />
              <Route path="/createjobs" element={<CreateGig/>} />
              <Route path="/jobs" element={<Jobs/>} />
+             <Route path="/profile" element={<Profile/>} />
           </Routes>
+          
         </Router>
+                <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} newestOnTop closeOnClick pauseOnFocusLoss draggable pauseOnHover />
+
     </div>
   )
 }

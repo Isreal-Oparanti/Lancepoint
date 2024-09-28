@@ -2,8 +2,7 @@ import { createContext, useReducer, useState } from 'react';
  
 
 const initialState = {
-    user:  JSON.parse(localStorage.getItem('user')) || null,
-    token: localStorage.getItem('token') || null
+    user:  JSON.parse(localStorage.getItem('user')) || null
 }
 export const AuthContext = createContext(initialState);
   const logout = () => {

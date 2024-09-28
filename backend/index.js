@@ -15,8 +15,8 @@
   dotenv.config();
 
    
-  const mongoURI = "mongodb+srv://Isreal:oparanti@cluster0.pkhckh1.mongodb.net/hackathon?retryWrites=true&w=majority&appName=Cluster0"
-
+  // const mongoURI = "mongodb+srv://Isreal:oparanti@cluster0.pkhckh1.mongodb.net/hackathon?retryWrites=true&w=majority&appName=Cluster0"
+  const mongoURI = "mongodb://localhost:27017/Hackathon"
 
   mongoose.connect(mongoURI, {
     useNewUrlParser: true,
