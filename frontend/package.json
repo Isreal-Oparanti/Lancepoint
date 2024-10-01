@@ -11,12 +11,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@solflare-wallet/sdk": "^1.4.2",
     "@wormhole-foundation/wormhole-connect": "^0.3.21",
     "autoprefixer": "^10.4.19",
     "axios": "^1.6.2",
     "postcss": "^8.4.38",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-hot-toast": "^2.4.1",
     "react-router-dom": "^6.8.1",
     "react-tagsinput": "^3.20.3",
     "react-toast": "1.0.3",
