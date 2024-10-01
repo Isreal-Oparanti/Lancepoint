@@ -13,7 +13,7 @@ import { AuthContext } from '../../context/auth';
  
  
 const SideNav = () => {
-  const { auth, logout } = useContext(AuthContext); // Get auth context
+  const { auth, logout } = useContext(AuthContext);  
    
    const logoutuser = () =>{ 
       logout()

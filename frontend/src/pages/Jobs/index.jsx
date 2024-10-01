@@ -4,16 +4,16 @@ import SideNav from '../../components/Sidebar';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { format, differenceInWeeks, differenceInDays } from 'date-fns';
-import { AuthContext } from '../../context/auth'; // Assuming you have an AuthContext
+import { AuthContext } from '../../context/auth'; 
 
 function Job() {
   const [jobs, setJobs] = useState([]);
-  const [appliedJobs, setAppliedJobs] = useState([]); // State to track applied jobs
-  const { auth } = useContext(AuthContext); // Access the authenticated user
+  const [appliedJobs, setAppliedJobs] = useState([]); 
+  const { auth } = useContext(AuthContext); 
   const userId = auth.user._id
   console.log(userId)
   useEffect(() => {
-    // Fetch job listings and applied jobs when the component mounts\
+ 
     const fetchJobsAndApplied = async () => {
        
       try {
@@ -58,7 +58,7 @@ function Job() {
     }
   };
 console.log(appliedJobs)
-  // Function to calculate duration and format dates
+   
   const formatDateAndDuration = (startDate, endDate) => {
     const start = new Date(startDate);
     const end = new Date(endDate);
@@ -80,7 +80,7 @@ console.log(appliedJobs)
         <Navbar />
  
 
-        {/* Job Listings */}
+    
         {jobs.length > 0 ? (
           jobs.map((job, id) => {
             const { duration, formattedStartDate, formattedEndDate } = formatDateAndDuration(job.startDate, job.endDate);

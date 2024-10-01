@@ -23,23 +23,23 @@ function CreateGig() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Include userId from auth.user
+     
     const dataToSubmit = { ...jobsData, userId: auth.user._id };
 
     try {
       const response = await axios.post(`http://localhost:5000/api/create-jobs`, dataToSubmit);
       const newJob = response.data;
 
-      // Update the user in the AuthContext with the newly created job
+      
       setAuth((prevAuth) => ({
         ...prevAuth,
         user: {
           ...prevAuth.user,
-          jobs: [...prevAuth.user.jobs, newJob] // Add the new job to user's jobs array
+          jobs: [...prevAuth.user.jobs, newJob]  
         }
       }));
 
-      // Clear form fields after successful submission
+      
       setJobsData({
         jobTitle: '',
         tags: '',
@@ -137,7 +137,7 @@ function CreateGig() {
               </div>
             </div>
 
-            {/* Payment Section - Token and Amount */}
+             
             <div className='w-full'>
               <h2 className='text-lg font-semi-bold mb-2'>Payment</h2>
               <div className='flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4'>
@@ -167,8 +167,8 @@ function CreateGig() {
               </div>
             </div>
 
-            {/* Submit Button */}
-            <button type='submit' className='bg-primary-dark hover:bg-blue-700 font-bold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400'>
+ 
+            <button type='submit' className='bg-purple-700 hover:bg-blue-700 font-bold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400'>
               Create Job
             </button>
           </form>

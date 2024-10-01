@@ -13,7 +13,7 @@ const Navbar = () => {
     <>
       <header className="bg-opacity-90 mx-auto p-2 bg-primary-dark text-white rounded-full border-2 border-stone-500">
         <nav className="flex justify-between  items-center w-[90%] mx-auto md:flex-row flex-col">
-          {/* Logo Section */}
+         
           <div className="flex justify-between w-full md:w-auto items-center">
           <img src={HomeIcon} alt="Home Icon" width="92" height="92" /> 
             <button
@@ -23,8 +23,7 @@ const Navbar = () => {
               {isMenuOpen ? "Close" : "Menu"}
             </button>
           </div>
-
-          {/* Search Bar */}
+ 
           <div className="relative flex items-center mt-3 md:mt-0 w-full md:w-auto">
             <input
               type="text"
@@ -33,8 +32,7 @@ const Navbar = () => {
             />
             <i className="absolute top-3 right-3 fa fa-search text-secondary-dark"></i>
           </div>
-
-          {/* Menu Links */}
+ 
           <div
             className={`md:flex   md:flex-row md:items-center flex-col md:static absolute w-full left-0 md:min-h-fit min-h-[60vh] bg-primary-dark transition-all duration-500 ${
               isMenuOpen ? "top-[60px]" : "top-[-100%]"

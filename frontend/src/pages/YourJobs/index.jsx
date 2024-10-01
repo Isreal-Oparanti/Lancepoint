@@ -7,19 +7,18 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const YourGigsPage = () => {
-  const { auth } = useContext(AuthContext); // Get auth context
-  const [userJobs, setUserJobs] = useState([]); // Jobs created by the user
-  const [loading, setLoading] = useState(true); // Loading state for fetching jobs
-  const [applicants, setApplicants] = useState({}); // To store applicants by job
-  const [accordionOpen, setAccordionOpen] = useState({}); // Control opening/closing of applicant section
-  const [userOrders, setUserOrders] = useState([]); // User's orders (accepted applicants)
+  const { auth } = useContext(AuthContext); 
+  const [userJobs, setUserJobs] = useState([]); 
+  const [loading, setLoading] = useState(true); 
+  const [applicants, setApplicants] = useState({}); 
+  const [accordionOpen, setAccordionOpen] = useState({});
+  const [userOrders, setUserOrders] = useState([]); 
   const [a, setA] = useState(true)
   const [pending, setPending] = useState(false)
 
 
-  const [reviews, setReviews] = useState({}); // Manage ratings and feedback
+  const [reviews, setReviews] = useState({});
 
-// Handle rating change
 const handleRatingChange = (rating, applicantId) => {
   setReviews((prev) => ({
     ...prev,
@@ -27,7 +26,7 @@ const handleRatingChange = (rating, applicantId) => {
   }));
 };
 
-// Handle feedback change
+
 const handleFeedbackChange = (feedback, applicantId) => {
   setReviews((prev) => ({
     ...prev,
@@ -35,7 +34,7 @@ const handleFeedbackChange = (feedback, applicantId) => {
   }));
 };
 
-// Handle review submission
+
 const handleSubmitReview = async (e, applicantId) => {
   e.preventDefault();
   const review = reviews[applicantId];
@@ -53,7 +52,7 @@ const handleSubmitReview = async (e, applicantId) => {
   }
 };
 
-  // Fetch jobs created by the user
+  
   useEffect(() => {
     const fetchJobs = async () => {
       try {
@@ -72,7 +71,7 @@ const handleSubmitReview = async (e, applicantId) => {
     fetchJobs();
   }, [auth.user.jobs]);
 
-  // Fetch applicants for a job if not already fetched
+  
   const fetchApplicants = async (job) => {
     if (!applicants[job._id]) {
       try {
@@ -87,7 +86,7 @@ const handleSubmitReview = async (e, applicantId) => {
   };
   console.log(applicants)
 
-  // Toggle accordion to show/hide applicants and fetch if needed
+
   const toggleAccordion = (jobId) => {
     setAccordionOpen((prev) => ({ ...prev, [jobId]: !prev[jobId] }));
     if (!applicants[jobId]) {
@@ -95,7 +94,7 @@ const handleSubmitReview = async (e, applicantId) => {
     }
   };
 
-  // Toggle acceptance/cancelation of an application
+
   const toggleApplication = async (applicantId, jobId, accepted) => {
     isOrderStarted(jobId)
     try {
@@ -103,19 +102,17 @@ const handleSubmitReview = async (e, applicantId) => {
         await axios.post("http://localhost:5000/api/accept-application", { applicantId, jobId });
         toast.success("Application accepted!");
         setPending(true)
-        // Add the job to userOrders
+      
         setUserOrders((prevOrders) => [...prevOrders, { id: jobId, completedStatus: false }]);
       } else {
         await axios.post("http://localhost:5000/api/cancel-application", { applicantId, jobId });
         toast.success("Application canceled!");
         setPending(false)
-        // Remove the job from userOrders
         setUserOrders((prevOrders) =>
           prevOrders.filter((order) => order.id.toString() !== jobId)
         );
       }
 
-      // Update applicants state
       setApplicants((prev) => ({
         ...prev,
         [jobId]: prev[jobId].map((applicant) =>
@@ -127,7 +124,7 @@ const handleSubmitReview = async (e, applicantId) => {
     }
   };
 
-  // Check if the user has already accepted an applicant for the job
+  
   const isOrderStarted = (jobId) => {
     setA(userOrders.some((order) => order.id === jobId));
     console.log(a)

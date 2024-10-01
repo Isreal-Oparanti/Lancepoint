@@ -9,14 +9,14 @@ exports.createJob = async function (req, res) {
   }
 
   try {
-    // Find the user by their ID
+    
     const user = await User.findById(userId);
     
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    // Create a new job instance
+ 
     const newJob = new Job({
       jobTitle,
       tags,
@@ -28,14 +28,14 @@ exports.createJob = async function (req, res) {
       createdBy: userId
     });
 
-    // Save the new job to the database
+  
     const savedJob = await newJob.save();
 
-    // Update the user's jobs array
+   
     user.jobs.push(savedJob._id);
     await user.save();
 
-    // Return a response with the saved job
+    
     res.status(201).json(savedJob);
   } catch (err) {
     console.error(err);
@@ -45,13 +45,13 @@ exports.createJob = async function (req, res) {
 
 exports.getAllJobs = async function (req, res) {
   try {
-    // Fetch all jobs from the database
+     
     const jobs = await Job.find();
     
-    // Send the jobs as a response
+     
     res.status(200).json(jobs);
   } catch (err) {
-    // Handle errors
+    
     console.error(err);
     res.status(500).json({ error: 'Failed to fetch jobs' });
   }
@@ -77,7 +77,7 @@ exports.applyForJob = async function (req, res) {
       return res.status(404).json({ message: 'Job not found' });
     }
 
-    // Add the userId to the appliedUsers array if not already present
+     
     if (!job.applied.includes(userId)) {
       job.applied.push(userId);
     } else {
@@ -94,11 +94,8 @@ exports.applyForJob = async function (req, res) {
 
 exports.getApplyJobs = async function (req, res) {
   try {
-    const userId = req.body.userId; // Get the userId from the route parameters
-    // console.log(req.params.userId)
-    // id = userId.toString()
-  
-    // Find all jobs where the applied property includes the userId
+    const userId = req.body.userId; 
+     // Find all jobs where the applied property includes the userId
     const jobs = await Job.find({applied: userId})
      
      const apply = jobs.map((job) => job._id);
@@ -106,7 +103,7 @@ exports.getApplyJobs = async function (req, res) {
     
     return res.status(200).json({
       success: true,
-      appliedJobs: apply, // Send back the array of job IDs
+      appliedJobs: apply,  
     });
   } catch (error) {
     console.error(error);

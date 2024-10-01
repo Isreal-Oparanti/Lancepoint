@@ -12,11 +12,11 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const navigate = useNavigate(); // For navigation after successful login
+  const navigate = useNavigate(); 
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    setError(''); // Reset error message
+    setError(''); // 
 
     if (!email || !password) {
       setError('Please fill in all fields.');
@@ -27,19 +27,19 @@ const Login = () => {
     try {
       const response = await axios.post('http://localhost:5000/api/login', { email, password });
 
-      // Get user data and token from response
+       
       const { user, token } = response.data;
 
-      // Save user data and token in localStorage
+       
       localStorage.setItem('user', JSON.stringify(user));
       localStorage.setItem('token', token);
 
-      // Set auth state with user info
+       
       setAuth({user: user});
 
       toast.success('Login Successful!');
       
-      // Redirect to profile page after successful login
+       
       navigate('/profile');
     } catch (error) {
       setError(error.response?.data?.message || 'Login failed. Please try again.');
@@ -51,7 +51,7 @@ const Login = () => {
     <>
       
       <div id="container" className="flex flex-col lg:flex-row justify-center w-full min-h-screen">
-        {/* Left Side - Form */}
+         
         <div className="flex-1 bg-primary-dark flex flex-col items-center justify-center p-4">
           <div className="bg-opacity-10 mt-10 flex justify-center bg-secondary-dark py-8 mx-auto shadow rounded-lg px-4 w-full max-w-md relative border-2 border-stone-700">
             <form onSubmit={handleFormSubmit} className="flex flex-col justify-center space-y-4 w-full">

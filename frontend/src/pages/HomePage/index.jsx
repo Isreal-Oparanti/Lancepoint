@@ -1,16 +1,6 @@
 import React,{ useState } from "react";
 import Navbar from "../../components/Navbar"; 
-import signUpImage from "../../assets/2.jpeg" 
-// import signUpImage1 from "../../assets/1.jpeg" 
 import { Link } from "react-router-dom";
-
-// import axios from "axios";
-
-// import { server } from "../../server";
- 
-
-
-//Button  component
  
 const Home = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -42,10 +32,4 @@ const Home = () => {
 
 export default Home;
 
-
-// <div className="flex items-center gap-6">
-//                         <button className="bg-[#a6c1ee] text-white px-5 py-2 rounded-full hover:bg-[#87acec]">Sign in</button>
-//                         <button onClick={toggleMenu} className="text-3xl cursor-pointer md:hidden">
-//                         {isMenuOpen ? 'Close' : 'Menu'}
-//                         </button>
-//                     </div>
+ 

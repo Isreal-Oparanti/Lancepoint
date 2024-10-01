@@ -6,22 +6,20 @@ import Navbar from "../../components/Navbar";
 import { AuthContext } from "../../context/auth";
 
 const Profile = () => {
-  const { auth, setAuth } = useContext(AuthContext); // Fetch user info from auth context
-  const { id } = useParams(); // Get the id from the URL params
-  const [userProfile, setUserProfile] = useState(null); // State to hold the fetched profile data
+  const { auth, setAuth } = useContext(AuthContext); 
+  const { id } = useParams(); 
+  const [userProfile, setUserProfile] = useState(null); 
   const [editMode, setEditMode] = useState(false);
   const [newSkill, setNewSkill] = useState("");
 
-  // Determine whose profile is being viewed (fallback to auth user if it's their own profile)
+  
   const isOwnerProfile = !id || id === auth?.user?._id;
   const profileId = id ? id : auth.user._id;
 
-  // Set fallback values to prevent undefined errors
+   
   const [updatedSkills, setUpdatedSkills] = useState([]);
   const [description, setDescription] = useState("");
-// console.log(auth.user.review)
-  // Fetch the profile when the component mounts or when the profileId changes
-  useEffect(() => {
+   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
         const response = await axios.post('http://localhost:5000/api/get-profile',  { profileId });
@@ -44,32 +42,32 @@ const Profile = () => {
   const handleAddSkill = () => {
     if (newSkill.trim() !== "" && !updatedSkills.includes(newSkill)) {
       setUpdatedSkills([...updatedSkills, newSkill]);
-      setNewSkill(""); // Clear input after adding skill
+      setNewSkill(""); 
     }
   };
 
   const handleRemoveSkill = (skillToRemove) => {
     const filteredSkills = updatedSkills.filter((skill) => skill !== skillToRemove);
-    setUpdatedSkills(filteredSkills); // Update state with filtered skills
+    setUpdatedSkills(filteredSkills); 
   };
 
   const handleSave = async () => {
     try {
-      const updatedUser = { userId: profileId, skills: updatedSkills, description }; // Add description to updated user info
+      const updatedUser = { userId: profileId, skills: updatedSkills, description }; 
 
-      // Save updated user info to the server
+       
       const response = await axios.put("http://localhost:5000/api/update", updatedUser);
       const newData = response.data;
 
-      // If the current user is editing their own profile, update the auth context
+      
       if (isOwnerProfile) {
         setAuth({ user: newData });
 
-        // Update the local storage with updated user info
+    
         localStorage.setItem("user", JSON.stringify(newData));
       }
 
-      // Exit edit mode
+     
       setEditMode(false);
     } catch (error) {
       console.error("Error saving user information:", error);
