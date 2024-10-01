@@ -1,57 +1,135 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react'; 
 import Navbar from '../../components/Navbar';
 import SideNav from '../../components/Sidebar';
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import { format, differenceInWeeks, differenceInDays } from 'date-fns';
+import { AuthContext } from '../../context/auth'; // Assuming you have an AuthContext
 
 function Job() {
   const [jobs, setJobs] = useState([]);
-
+  const [appliedJobs, setAppliedJobs] = useState([]); // State to track applied jobs
+  const { auth } = useContext(AuthContext); // Access the authenticated user
+  const userId = auth.user._id
+  console.log(userId)
   useEffect(() => {
-    (async () => {
+    // Fetch job listings and applied jobs when the component mounts\
+    const fetchJobsAndApplied = async () => {
+       
       try {
-        const response = await axios.get('http://localhost:5000/api/get-jobs');
-        setJobs(response.data);
+        const [jobsResponse, appliedResponse] = await Promise.all([
+          axios.get('http://localhost:5000/api/get-jobs'),
+          axios.post(`http://localhost:5000/api/get-apply-jobs`, { userId })
+        ]);
+        
+        setJobs(jobsResponse.data);
+        setAppliedJobs(appliedResponse.data.appliedJobs); // Assuming the API returns an array of applied job IDs
       } catch (error) {
         console.error(error);
       }
-    })();
-  }, []);
+    };
 
-  const success = () => {
-    alert('Job Created');
+    fetchJobsAndApplied();
+  }, [auth.user._id]);
+
+  // Function to apply for a job
+  const applyForJob = async (jobId) => {
+    try {
+      const userId = auth.user._id; // Get the logged-in user's ID
+
+      const response = await axios.post('http://localhost:5000/api/apply', {
+        jobId,
+        userId,
+      });
+
+      if (response.status === 200) {
+        toast.success('You have successfully applied for the job!');
+        setAppliedJobs((prev) => [...prev, jobId]); 
+      } else {
+        toast.error('There was an issue applying for the job.');
+      }
+    } catch (error) {
+      if (error.response && error.response.data) {
+        toast.error(error.response.data.message); // Display the specific error message from the server
+      } else {
+        console.error(error);
+        toast.error('An error occurred while applying.');
+      }
+    }
+  };
+console.log(appliedJobs)
+  // Function to calculate duration and format dates
+  const formatDateAndDuration = (startDate, endDate) => {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    const weeks = differenceInWeeks(end, start);
+    const days = differenceInDays(end, start);
+
+    let duration = weeks > 0 ? `${weeks} week${weeks > 1 ? 's' : ''}` : `${days} day${days > 1 ? 's' : ''}`;
+    const formattedStartDate = format(start, 'MM/dd/yyyy');
+    const formattedEndDate = format(end, 'MM/dd/yyyy');
+
+    return { duration, formattedStartDate, formattedEndDate };
   };
 
   return (
-    <div className="flex">
-      <SideNav /> 
-      <div className="p-6 flex-1 ml-[220px] min-h-screen">
+    <div className="flex min-h-screen">
+      <SideNav />
+      <div className="p-6 flex-1 ml-[220px]">
         <Navbar />
+ 
+
+        {/* Job Listings */}
         {jobs.length > 0 ? (
-          jobs.map((user, id) => (
-            <div
-              key={id}
-              className="bg-primary-dark w-[50%] bg-blur py-8 mx-auto mt-5 rounded-[20px] border-2 border-stone-500"
-            >
-              <div className="flex flex-col space-y-4 px-8">
-                <h2 className="text-xl font-bold text-white">{user.jobTitle}</h2>
-                <div className="flex space-x-4">
-                  <div className="bg-gray-600 text-white rounded-md px-4 py-1 text-xs capitalize">
-                    {user.tags}
+          jobs.map((job, id) => {
+            const { duration, formattedStartDate, formattedEndDate } = formatDateAndDuration(job.startDate, job.endDate);
+
+            const hasApplied = appliedJobs.includes(job._id); // Check if the user has applied for this job
+
+            return (
+              <div
+                key={id}
+                className="bg-primary-dark w-full lg:w-[50%] bg-blur py-8 mx-auto mt-5 rounded-lg border-2 border-stone-500"
+              >
+                <div className="flex flex-col space-y-4 px-8">
+                  <h2 className="text-xl font-bold text-white">{job.jobTitle}</h2>
+
+                  <div className="flex flex-wrap gap-4">
+                    <div className="bg-gray-600 text-white rounded-md px-4 py-1 text-xs capitalize">
+                      {job.tags}
+                    </div>
+                    <div className="bg-green-300 text-green-[.09] rounded-lg px-2 py-1 text-xs capitalize">
+                      <span className="text-green-900 font-bold">${job.price}</span>
+                    </div>
+                    <div className="bg-gray-600 text-white rounded-md px-4 py-1 text-xs">
+                      {duration} ({formattedStartDate} - {formattedEndDate})
+                    </div>
                   </div>
-                  <div className="bg-green-300 text-green-[.09] rounded-lg px-2 py-1 text-xs capitalize">
-                    <span className="text-green-900 font-bold">${user.price}</span>
-                  </div>
+
+                  <p className="text-gray-400 text-sm">{job.description}</p>
+
+                  {hasApplied ? (
+                    <button
+                      
+                      className="w-full lg:w-20 rounded bg-gray-500 text-white font-bold py-1 px-3"
+                      
+                      onClick={() => applyForJob(job._id)}
+                    >
+                      Applied
+                    </button>
+                  ) : (
+                    <button
+                      className="w-full lg:w-20 rounded bg-purple-dark hover:bg-blue-700 text-white font-bold py-1 px-3"
+                      onClick={() => applyForJob(job._id)}
+                    >
+                      Apply
+                    </button>
+                  )}
                 </div>
-                <p className="text-gray-400 text-sm">{user.description}</p>
-                <button
-                  className="w-20 rounded-full bg-purple-dark hover:bg-blue-700 text-white font-bold py-1 px-3"
-                  onClick={success}
-                >
-                  Apply
-                </button>
               </div>
-            </div>
-          ))
+            );
+          })
         ) : (
           <div className="font-bold text-white">No available gig</div>
         )}

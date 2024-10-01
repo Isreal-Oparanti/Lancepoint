@@ -8,6 +8,7 @@ const jobSchema = new mongoose.Schema({
   amount: { type: Number, required: true },
   startDate: { type: Date, required: true },
   endDate: { type: Date, required: true },
+  applied: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true } // Refers to the User model
 });
 

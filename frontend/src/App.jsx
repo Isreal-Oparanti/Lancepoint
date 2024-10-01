@@ -13,6 +13,9 @@ import Jobs from './pages/Jobs';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Profile from './pages/Profile';
+import YourGigsPage from './pages/YourJobs'
+import Application from './pages/Application'
+
  //** */ auth Middleware ///
  
 
@@ -54,6 +57,10 @@ function App() {
              <Route path="/createjobs" element={<CreateGig/>} />
              <Route path="/jobs" element={<Jobs/>} />
              <Route path="/profile" element={<Profile/>} />
+             <Route path="/profile/:id" element={<Profile/>} />
+             <Route path="/yourjob" element={<YourGigsPage/>} />
+             <Route path="/application" element={<Application/>} />
+
           </Routes>
           
         </Router>
@@ -64,3 +71,8 @@ function App() {
 }
 
 export default App
+
+
+
+
+

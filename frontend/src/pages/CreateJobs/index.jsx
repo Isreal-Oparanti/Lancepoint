@@ -2,11 +2,13 @@ import React, { useState, useContext } from 'react';
 import Navbar from '../../components/Navbar';
 import SideNav from '../../components/Sidebar';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/auth';
 
 function CreateGig() {
   const { auth, setAuth } = useContext(AuthContext); // Get auth context
+  const navigate = useNavigate();
   console.log(auth)
   const [jobsData, setJobsData] = useState({
     jobTitle: '',
@@ -47,17 +49,21 @@ function CreateGig() {
         startDate: '',
         endDate: ''
       });
+      toast.success('You have Successfully created a new Gig');
+      navigate('/jobs');
+      
     } catch (error) {
       console.error('Error submitting job:', error);
     }
   };
 
   return (
-    <div className='flex'>
-      <SideNav />
-      <div className='p-6 flex-1 ml-[220px]'>
-        <Navbar />
-        <div className='bg-primary-dark w-full sm:w-[60%] lg:w-[50%] bg-blur py-8 mx-auto mt-5 rounded-[20px] border-2 border-stone-500 text-secondary-dark'>
+    <div className="flex min-h-screen">
+    <SideNav />
+
+    <div className="p-6 flex-1 ml-[220px]">
+      <Navbar />
+        <div className='bg-primary-dark  sm:w-[60%] lg:w-[50%] bg-blur py-8 mx-auto mt-5 rounded-[20px] border-2 border-stone-500 text-secondary-dark'>
           <form className='flex flex-col items-center space-y-4 px-4 sm:px-8' onSubmit={handleSubmit}>
             {/* Job Title Input */}
             <div className='w-full'>

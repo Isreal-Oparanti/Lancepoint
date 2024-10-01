@@ -6,6 +6,7 @@ const initialState = {
 }
 export const AuthContext = createContext(initialState);
   const logout = () => {
+    setAuth('')
     localStorage.removeItem('token');
     localStorage.removeItem('user');
   };

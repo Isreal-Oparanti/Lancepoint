@@ -3,7 +3,8 @@ import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import signUpImage from "../../assets/2.jpeg"; 
+import signUpImage from "../../assets/2.jpeg";
+import Icon from "../../assets/Solflare icon.svg"; 
 import { AuthContext } from "../../context/auth";
 
 const Login = () => {
@@ -48,7 +49,7 @@ const Login = () => {
 
   return (
     <>
-      <ToastContainer />
+      
       <div id="container" className="flex flex-col lg:flex-row justify-center w-full min-h-screen">
         {/* Left Side - Form */}
         <div className="flex-1 bg-primary-dark flex flex-col items-center justify-center p-4">

@@ -29,7 +29,9 @@ const UserSchema = new Schema({
     },
     skills: [],
 
-    jobs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Job' }]
+    jobs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Job' }],
+    orders: [],
+    reviews: []
 }, 
 {
     timestamps: true

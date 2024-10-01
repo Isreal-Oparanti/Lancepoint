@@ -128,3 +128,152 @@ exports.updateUser = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+
+exports.getUser = async function (req, res) {
+  try {
+    const { applicantIds } = req.body; // Array of applicant IDs from the frontend
+    
+    // Find all users whose IDs are in the applicantIds array
+    const applicants = await UserModel.find({ _id: { $in: applicantIds } }).select('-password');
+    
+    if (!applicants || applicants.length === 0) {
+      return res.status(404).json({ message: 'No applicants found' });
+    }
+       
+    return res.status(200).json({ applicants });
+  } catch (error) {
+    console.error('Error fetching applicants:', error);
+    res.status(500).json({ message: 'Server error while fetching applicants.' });
+  }
+};
+
+ 
+
+ 
+exports.getProfile = async function (req, res) {
+  const { profileId } = req.body; // Extract the ID from the route parameters
+
+  try {
+    // Find the user by their ID
+    const user = await UserModel.findById(profileId).select('-password'); 
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Send the user data back
+    res.json(user);
+  } catch (error) {
+    console.error("Error fetching user by ID:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+ 
+// controllers/AuthController.js
+
+exports.cancelApplication = async function (req, res) {
+  try {
+    const { applicantId, jobId } = req.body; // Get applicantId and jobId from the request body
+
+    // Find the applicant by their ID
+    const user = await UserModel.findById(applicantId);
+
+    if (!user) {
+      return res.status(404).json({ message: "Applicant not found" });
+    }
+
+    // Use `find` to check if the job exists in the user's orders
+    const existingOrder = user.orders.find(order => order.id === jobId);
+
+    if (!existingOrder) {
+      return res.status(400).json({ message: "Job not found in user's orders" });
+    }
+
+    // Remove the job ID from the user's orders array
+    user.orders = user.orders.filter((order) => order.id.toString() !== jobId);
+
+    await user.save();
+
+    res.status(200).json({ message: "Application canceled and job removed from user's orders", user });
+  } catch (error) {
+    console.error("Error canceling application:", error);
+    res.status(500).json({ message: "Server error canceling application" });
+  }
+};
+
+// Accepting an order remains the same, included for completeness
+
+exports.acceptApplication = async function (req, res) {
+  try {
+    const { applicantId, jobId } = req.body;
+
+    // Find the applicant by their ID
+    const user = await UserModel.findById(applicantId);
+
+    if (!user) {
+      return res.status(404).json({ message: "Applicant not found" });
+    }
+
+    // Check if the job is already in their orders (using jobId)
+    const existingOrder = user.orders.find(order => order.id === jobId);
+
+    if (existingOrder) {
+      return res.status(400).json({ message: "Application has already been accepted for this job" });
+    }
+
+    // Add the job ID to the user's orders array with completedStatus as false
+    user.orders.push({ id: jobId, completedStatus: false });
+
+    await user.save();
+
+    res.status(200).json({ message: "Application accepted and job added to user's orders", user });
+  } catch (error) {
+    console.error("Error accepting application:", error);
+    res.status(500).json({ message: "Server error accepting application" });
+  }
+};
+
+exports.updateOrder = async function (req, res) {
+   
+     const { userId, orders } = req.body;
+  
+    try {
+      // Find the user by ID
+      const user = await UserModel.findById(userId);
+  
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+  
+      // Update the user's orders array
+      user.orders = orders;
+  
+      // Save the updated user
+      await user.save();
+  
+      return res.status(200).json({ message: "Order updated successfully", orders: user.orders });
+    } catch (error) {
+      console.error("Error updating order:", error);
+      return res.status(500).json({ message: "Failed to update the order", error });
+    } 
+  
+};
+
+
+exports.saveReview = async function (req, res) {
+  const { applicantId, rating, feedback } = req.body;
+  
+  try {
+    // Find the applicant and update their profile with the review
+    await UserModel.findByIdAndUpdate(applicantId, {
+      $push: {
+        reviews: { rating, feedback }
+      }
+    });
+    res.status(200).json({ message: 'Review saved successfully' });
+  } catch (error) {
+    console.error('Error saving review:', error);
+    res.status(500).json({ message: 'Failed to save review' });
+  }
+}
