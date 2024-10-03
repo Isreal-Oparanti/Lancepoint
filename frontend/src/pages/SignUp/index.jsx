@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import signUpImage from "../../assets/2.jpeg";
-import { toast } from 'react-toastify'; // Correct import
+import { toast } from "react-toastify"; // Correct import
 
 const SignUp = () => {
   const [firstname, setFirstname] = useState("");
@@ -14,7 +14,7 @@ const SignUp = () => {
   const [isWalletConnected, setIsWalletConnected] = useState(false);
   const navigate = useNavigate();
 
-  const wallet = new Solflare();
+  // const wallet = new Solflare();
 
   const handleConnect = async () => {
     try {
@@ -135,7 +135,6 @@ const SignUp = () => {
               </div>
               <div className="text-white text-center">Connect Wallet</div>
               <div className="flex justify-center">
-              
                 <button
                   type="button"
                   // onClick={connectWallet}
