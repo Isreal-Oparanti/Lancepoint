@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@solflare-wallet/sdk": "^1.4.2",
+    "@wormhole-foundation/sdk": "^0.10.9",
     "@wormhole-foundation/wormhole-connect": "^0.3.21",
     "autoprefixer": "^10.4.19",
     "axios": "^1.6.2",

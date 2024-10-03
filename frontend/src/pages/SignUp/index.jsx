@@ -13,6 +13,7 @@ const SignUp = () => {
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
   const [isWalletConnected, setIsWalletConnected] = useState(false);
+  const [walletAddress, setWalletAddress] = useState(""); // Add walletAddress state
   const [loading, setLoading] = useState(false); // Add loading state
   const navigate = useNavigate();
 
@@ -22,6 +23,9 @@ const SignUp = () => {
     try {
       await wallet.connect();
       const walletAddress = wallet.publicKey.toString();
+
+      localStorage.setItem("walletAddress", walletAddress);
+      setWalletAddress(walletAddress);
       console.log("Wallet connected", walletAddress);
       toast.success(`Wallet connected`, {
         position: "top-right",
@@ -40,26 +44,34 @@ const SignUp = () => {
     setError("");
     setLoading(true); // Set loading to true when form is submitted
 
-    if (!firstname || !lastname || !email || !password) {
+    if (!firstname || !lastname || !email || !password || !walletAddress) {
       setError("Please fill in all required fields.");
       toast.error("Please fill in all required fields.");
       setLoading(false); // Stop loading on error
       return;
     }
 
+    const payload = {
+      firstname,
+      lastname,
+      email,
+      password,
+      description,
+      wallet: walletAddress, // Add walletAddress to the payload
+    };
+
+    console.log("Sent payload:", payload); // Log the payload before sending
+
     try {
-      const response = await axios.post("http://localhost:5000/api/register", {
-        firstname,
-        lastname,
-        email,
-        password,
-        description,
-      });
+      const response = await axios.post(
+        "http://localhost:5000/api/register",
+        payload
+      );
       console.log("Signup successful:", response.data);
       toast.success("Sign up Successful!!!");
 
       setLoading(false); // Stop loading after success
-      navigate("/login");
+      // navigate("/login");
     } catch (error) {
       console.error("Signup failed:", error.response?.data || error.message);
       setError(
@@ -139,6 +151,10 @@ const SignUp = () => {
                   className="appearance-none placeholder:text-slate-400 text-slate-300 bg-slate-700 block w-full px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm resize-none h-24"
                 ></textarea>
               </div>
+
+              {/* Hidden input for walletAddress */}
+              <input type="hidden" name="walletAddress" value={walletAddress} />
+
               <div className="text-white text-center">Connect Wallet</div>
               <div className="flex justify-center">
                 <button
