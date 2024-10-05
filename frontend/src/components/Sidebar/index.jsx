@@ -1,12 +1,12 @@
 import React,{ useContext } from 'react';
 import { Link } from 'react-router-dom';
-import HomeIcon from '../../assets/Home.svg';
-import BrowseJobs from '../../assets/Browse Jobs.svg';
-import YourGigs from '../../assets/Your Jobs.svg';
-import Application from '../../assets/Job Applications.svg';
-import Create from '../../assets/Create Jobs.svg';
-import Profile from '../../assets/iconamoon_profile.svg';
-import Logout from '../../assets/icons.svg';
+// import HomeIcon from '../../assets/Home.svg';
+// import BrowseJobs from '../../assets/Browse Jobs.svg';
+// import YourGigs from '../../assets/Your Jobs.svg';
+// import Application from '../../assets/Job Applications.svg';
+// import Create from '../../assets/Create Jobs.svg';
+// import Profile from '../../assets/iconamoon_profile.svg';
+// import Logout from '../../assets/icons.svg';
 
 import { AuthContext } from '../../context/auth';
 
@@ -29,33 +29,33 @@ const SideNav = () => {
       </div>
       <ul className="space-y-6 text-white mt-10">
         <li className="flex gap-2 hover:bg-purple-dark p-1 pl-6 rounded">
-          <img src={HomeIcon} alt="Home Icon" width="20" height="20" /> 
+          {/* <img src={HomeIcon} alt="Home Icon" width="20" height="20" />  */}
           <Link to="/home" className="hover:text-blue-400 font-semi-bold">Home</Link>
         </li>
         <li className="flex gap-2 hover:bg-purple-dark p-1 pl-6 rounded">
-          <img src={Create} alt="Home Icon" width="20" height="20" />
+          {/* <img src={Create} alt="Home Icon" width="20" height="20" /> */}
           <Link to="/createjobs" className="hover:text-blue-400 font-semi-bold">Create Gigs</Link>
         </li>
         <li className="flex gap-2 hover:bg-purple-dark p-1 pl-6 rounded">
-          <img src={BrowseJobs} alt="Home Icon" width="20" height="20" />
+          {/* <img src={BrowseJobs} alt="Home Icon" width="20" height="20" /> */}
           <Link to="/jobs" className="hover:text-blue-400 font-semi-bold">Browse Gigs</Link>
         </li>
         <li className="flex gap-2 hover:bg-purple-dark p-1 pl-6 rounded">
-          <img src={YourGigs} alt="Home Icon" width="20" height="20" />
+          {/* <img src={YourGigs} alt="Home Icon" width="20" height="20" /> */}
           <Link to="/yourjob" className="hover:text-blue-400 font-semi-bold">Your Gigs</Link>
         </li>
         <li className="flex gap-2 hover:bg-purple-dark p-1 pl-6 rounded">
-          <img src={Application} alt="Home Icon" width="20" height="20" />
+          {/* <img src={Application} alt="Home Icon" width="20" height="20" /> */}
           <Link to="/application" className="hover:text-blue-400 font-semi-bold">Orders</Link>
         </li>
         
         <li className="flex gap-2 hover:bg-purple-dark p-1 pl-6 rounded">
-          <img src={Profile} alt="Home Icon" width="20" height="20" />
+          {/* <img src={Profile} alt="Home Icon" width="20" height="20" /> */}
           <Link to="/profile" className="hover:text-blue-400 font-semi-bold">Profile</Link>
         </li>
 
         <li className="flex gap-2  p-1 pl-6 rounded " onClick={logoutuser} style={{marginTop: '90px'}}>
-          <img src={Logout} alt="Home Icon" width="20" height="20" />
+          {/* <img src={Logout} alt="Home Icon" width="20" height="20" /> */}
           <Link to="/login" className="hover:text-blue-400 font-semi-bold">Logout</Link>
         </li>
       </ul>
