@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import signUpImage from "../../assets/2.jpeg";
-import { toast } from "react-toastify"; // Correct import
+
+import Solflare from "@solflare-wallet/sdk";
+import { toast, Toaster } from "react-hot-toast";
 
 const SignUp = () => {
   const [firstname, setFirstname] = useState("");
@@ -12,6 +14,8 @@ const SignUp = () => {
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
   const [isWalletConnected, setIsWalletConnected] = useState(false);
+  const [walletAddress, setWalletAddress] = useState(""); // Add walletAddress state
+  const [loading, setLoading] = useState(false); // Add loading state
   const navigate = useNavigate();
 
   // const wallet = new Solflare();
@@ -20,6 +24,9 @@ const SignUp = () => {
     try {
       await wallet.connect();
       const walletAddress = wallet.publicKey.toString();
+
+      localStorage.setItem("walletAddress", walletAddress);
+      setWalletAddress(walletAddress);
       console.log("Wallet connected", walletAddress);
       toast.success(`Wallet connected`, {
         position: "top-right",
@@ -36,25 +43,36 @@ const SignUp = () => {
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     setError("");
+    setLoading(true); // Set loading to true when form is submitted
 
-    if (!firstname || !lastname || !email || !password) {
+    if (!firstname || !lastname || !email || !password || !walletAddress) {
       setError("Please fill in all required fields.");
       toast.error("Please fill in all required fields.");
+      setLoading(false); // Stop loading on error
       return;
     }
 
+    const payload = {
+      firstname,
+      lastname,
+      email,
+      password,
+      description,
+      wallet: walletAddress, // Add walletAddress to the payload
+    };
+
+    console.log("Sent payload:", payload); // Log the payload before sending
+
     try {
-      const response = await axios.post("http://localhost:5000/api/register", {
-        firstname,
-        lastname,
-        email,
-        password,
-        description,
-      });
+      const response = await axios.post(
+        "http://localhost:5000/api/register",
+        payload
+      );
       console.log("Signup successful:", response.data);
       toast.success("Sign up Successful!!!");
 
-      navigate("/profile");
+      setLoading(false); // Stop loading after success
+      navigate("/login");
     } catch (error) {
       console.error("Signup failed:", error.response?.data || error.message);
       setError(
@@ -63,6 +81,7 @@ const SignUp = () => {
       toast.error(
         error.response?.data?.message || "Signup failed. Please try again."
       );
+      setLoading(false); // Stop loading after error
     }
   };
 
@@ -133,27 +152,46 @@ const SignUp = () => {
                   className="appearance-none placeholder:text-slate-400 text-slate-300 bg-slate-700 block w-full px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm resize-none h-24"
                 ></textarea>
               </div>
+
+              {/* Hidden input for walletAddress */}
+              <input type="hidden" name="walletAddress" value={walletAddress} />
+
               <div className="text-white text-center">Connect Wallet</div>
               <div className="flex justify-center">
                 <button
                   type="button"
-                  // onClick={connectWallet}
-                  className="bg-white py-2 px-4 w-full text-xs rounded-full hover:bg-gray-200 transition"
+                  onClick={handleConnect}
+                  disabled={isWalletConnected}
+                  className={`bg-white py-2 px-4 w-full text-xs rounded-full hover:bg-gray-200 transition items-center flex justify-center ${
+                    isWalletConnected ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
                 >
-                  MetaMask
+                  <img src="Group.png" width={30} height={30} alt="Solflare" />
+                  <span className="text-[17px]">
+                    {isWalletConnected ? "Wallet Connected" : "Solflare"}
+                  </span>
                 </button>
               </div>
               <Toaster />
               <div className="flex justify-center">
                 <button
                   type="submit"
-                  disabled={!isWalletConnected}
+                  disabled={!isWalletConnected || loading} // Disable during loading
                   className={`bg-purple-700 text-white py-2 px-4 w-full text-sm rounded-full hover:bg-purple-800 transition ${
-                    !isWalletConnected ? "opacity-50 cursor-not-allowed" : ""
+                    !isWalletConnected || loading
+                      ? "opacity-50 cursor-not-allowed"
+                      : ""
                   }`}
                 >
-                  Sign Up
+                  {loading ? "Signing Up..." : "Sign Up"}{" "}
+                  {/* Show loading text */}
                 </button>
+              </div>
+              <div className="text-white mt-4 mx-auto text-center">
+                Have an account already?{" "}
+                <Link to="/login" className="text-blue-400 hover:underline">
+                  Sign In
+                </Link>
               </div>
             </form>
           </div>
