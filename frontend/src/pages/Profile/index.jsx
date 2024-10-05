@@ -107,6 +107,7 @@ const Profile = () => {
                 {userProfile.firstname + " " + userProfile.lastname}
               </h2>
               <p>{userProfile.email}</p>
+              <p>{userProfile.wallet}</p>
 
               <div className="mt-4">
                 <h3 className="text-xl font-semibold">Description</h3>

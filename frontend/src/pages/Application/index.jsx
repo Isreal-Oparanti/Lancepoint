@@ -48,9 +48,31 @@ const ApplicationPage = () => {
         console.error("Failed to fetch user data:", error);
       }
     };
-
     if (auth?.user?._id) {
       fetchUserData();
+    }
+  }, [auth]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.post(
+          "http://localhost:5000/api/get-profile",
+          {
+            profileId: auth?.user?._id,
+          }
+        );
+        const userData = response.data;
+        if (userData.wallet) {
+          setWalletAddress(userData.wallet);
+        }
+        console.log(userData, "user data");
+      } catch (error) {
+        console.error("Failed to fetch user data:", error);
+      }
+    };
+    if (auth?.user?._id) {
+      fetchData();
     }
   }, [auth]);
 
@@ -68,6 +90,7 @@ const ApplicationPage = () => {
             setOrderJob(response.data.jobs[0]);
           }
         }
+        console.log(order, "jjobs");
       } catch (error) {
         console.error("Error fetching job:", error);
         toast.error("Failed to load the job.");
@@ -75,7 +98,6 @@ const ApplicationPage = () => {
         setLoading(false);
       }
     };
-
     fetchOrderJob();
   }, [auth.user.orders]);
 
@@ -110,63 +132,6 @@ const ApplicationPage = () => {
     } catch (error) {
       console.error("Error submitting the job:", error);
       toast.error("Failed to submit the job.");
-    }
-  };
-
-  const handleTransfer = async () => {
-    if (!recipientAddress || !amount) {
-      toast.error("Please enter recipient address and amount.");
-      return;
-    }
-
-    try {
-      const connection = new Connection(
-        clusterApiUrl("mainnet-beta"),
-        "confirmed"
-      );
-
-      const fromPublicKey = new PublicKey(walletAddress.trim());
-
-      let secretKey;
-      const storedSecretKey = localStorage.getItem("secretKey");
-
-      if (!storedSecretKey) {
-        console.error("Secret key not found in local storage.");
-        toast.error("Secret key not found. Please check your wallet.");
-        return;
-      }
-
-      try {
-        secretKey = Uint8Array.from(JSON.parse(fromPublicKey));
-      } catch (error) {
-        console.error("Failed to parse secret key:", error);
-        toast.error("Invalid secret key format. Please check your wallet.");
-        return;
-      }
-
-      if (secretKey.length !== 64) {
-        throw new Error("Invalid secret key length");
-      }
-
-      const fromWallet = Keypair.fromSecretKey(secretKey);
-
-      const transaction = new Transaction().add(
-        SystemProgram.transfer({
-          fromPubkey: fromPublicKey,
-          toPubkey: new PublicKey(recipientAddress),
-          lamports: Number(amount) * 1e9,
-        })
-      );
-
-      const signature = await connection.sendTransaction(transaction, [
-        fromWallet,
-      ]);
-      await connection.confirmTransaction(signature, "processed");
-
-      toast.success("Transfer successful!");
-    } catch (error) {
-      console.error("Error during transfer:", error);
-      toast.error("Failed to transfer SOL.");
     }
   };
 
@@ -245,43 +210,6 @@ const ApplicationPage = () => {
             </div>
           ) : (
             <p className="text-gray-400">You have no active orders.</p>
-          )}
-
-          <div className="flex justify-center mt-8">
-            <button
-              onClick={() => setShowWormhole((prev) => !prev)}
-              className="px-4 py-2 rounded bg-purple-600 hover:bg-purple-700 text-white"
-            >
-              Convert Asset With Wormhole
-            </button>
-            <button
-              onClick={() => setShowConnectEmbed((prev) => !prev)}
-              className="ml-4 px-4 py-2 rounded bg-purple-600 hover:bg-purple-700 text-white"
-            >
-              Initiate Transaction
-            </button>
-          </div>
-
-          {/* Wormhole Connect Display */}
-          {showWormhole && (
-            <div className="bg-gray-800 rounded-lg p-6 shadow-lg mt-6">
-              <h2 className="text-xl font-bold mb-4"> Connect with Wormhole</h2>
-              <WormholeConnect />
-
-              <Toaster />
-            </div>
-          )}
-
-          {/* Connect Embed Display */}
-          {showConnectEmbed && (
-            <div className="rounded-lg p-6 shadow-lg mt-6 flex justify-center items-center flex-col">
-              <h2 className="text-xl font-bold mb-4">Connect Embed</h2>
-              <ConnectEmbed
-                client={client}
-                showThirdwebBranding={false}
-                wallets={wallet}
-              />
-            </div>
           )}
         </div>
       </div>
