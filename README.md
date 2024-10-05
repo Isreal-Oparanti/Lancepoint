@@ -1,9 +1,7 @@
-# Team-Xploit
-
 
 ### Overview
 
-{APP NAME} is a revolutionary platform designed to streamline on-chain payments and empower workers with greater control over their reputation. Traditional freelancing platforms often lack transparency and put both clients and workers at risk of fraud or dishonest behavior. Our platform leverages blockchain technology to address these issues and provide a secure, transparent, and efficient environment for freelancers and clients to engage in business transactions.
+LancePoint is a revolutionary platform designed to streamline on-chain payments and empower workers with greater control over their reputation. Traditional freelancing platforms often lack transparency and put both clients and workers at risk of fraud or dishonest behavior. Our platform leverages blockchain technology to address these issues and provide a secure, transparent, and efficient environment for freelancers and clients to engage in business transactions.
 
 #### Key Features
 
