@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
-import HomeIcon from "../assets/LancepointLogo.svg";
+// import HomeIcon from "../assets/LancepointLogo.svg";
 import { toast, Toaster } from "react-hot-toast";
 import axios from "axios";
 import { AuthContext } from "../../context/auth";
@@ -62,7 +62,7 @@ const Navbar = () => {
       <header className="bg-opacity-90 mx-auto p-2 bg-primary-dark text-white rounded-full border-2 border-stone-500">
         <nav className="flex justify-between items-center w-[90%] mx-auto md:flex-row flex-col">
           <div className="flex justify-between w-full md:w-auto items-center">
-            <img src={HomeIcon} alt="Home Icon" width="92" height="92" />
+            {/* <img src={HomeIcon} alt="Home Icon" width="92" height="92" /> */}
             <button
               onClick={toggleMenu}
               className="text-3xl cursor-pointer md:hidden"
