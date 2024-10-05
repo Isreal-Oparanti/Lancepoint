@@ -12,9 +12,10 @@ import {
   SystemProgram,
   clusterApiUrl,
   Keypair,
-} from "@solana/web3.js"; // Import Solana libraries
-
-// Ensure Buffer is available in the browser
+} from "@solana/web3.js";
+import { ConnectEmbed } from "thirdweb/react";
+import { client } from "../../client";
+import { createWallet } from "thirdweb/wallets";
 
 const ApplicationPage = () => {
   const { auth, setAuth } = useContext(AuthContext);
@@ -25,8 +26,12 @@ const ApplicationPage = () => {
   const [jobLink, setJobLink] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [walletAddress, setWalletAddress] = useState("");
-  const [recipientAddress, setRecipientAddress] = useState(""); // State for recipient address
-  const [amount, setAmount] = useState(""); // State for transfer amount
+  const [recipientAddress, setRecipientAddress] = useState("");
+  const [amount, setAmount] = useState("");
+
+  // State to control component visibility
+  const [showWormhole, setShowWormhole] = useState(false);
+  const [showConnectEmbed, setShowConnectEmbed] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -36,7 +41,6 @@ const ApplicationPage = () => {
           { profileId: auth?.user?._id }
         );
         const userData = response.data;
-        console.log("fetched wallet and user profile", userData);
         if (userData.wallet) {
           setWalletAddress(userData.wallet);
         }
@@ -121,8 +125,6 @@ const ApplicationPage = () => {
         "confirmed"
       );
 
-      console.log("Wallet Address Before Parsing:", walletAddress);
-
       const fromPublicKey = new PublicKey(walletAddress.trim());
 
       let secretKey;
@@ -150,7 +152,7 @@ const ApplicationPage = () => {
 
       const transaction = new Transaction().add(
         SystemProgram.transfer({
-          fromPubkey: "9FCGTYBTNjUBokkEBcxzEApnPCcHoc9g92NbhNKBqm4x",
+          fromPubkey: fromPublicKey,
           toPubkey: new PublicKey(recipientAddress),
           lamports: Number(amount) * 1e9,
         })
@@ -167,6 +169,11 @@ const ApplicationPage = () => {
       toast.error("Failed to transfer SOL.");
     }
   };
+
+  const wallet = [
+    createWallet("io.metamask"),
+    createWallet("com.coinbase.wallet"),
+  ];
 
   return (
     <div className="min-h-screen flex text-white">
@@ -240,49 +247,42 @@ const ApplicationPage = () => {
             <p className="text-gray-400">You have no active orders.</p>
           )}
 
-          <h2 className="text-2xl mt-8">Transfer SOL</h2>
-          <div className="mt-4">
-            <label className="block text-sm font-medium mb-2">
-              Recipient Address:
-            </label>
-            <input
-              type="text"
-              value={recipientAddress}
-              onChange={(e) => setRecipientAddress(e.target.value)}
-              className="bg-gray-700 text-white p-2 rounded-lg w-full"
-              placeholder="Enter recipient wallet address"
-            />
-          </div>
-          <div className="mt-4">
-            <label className="block text-sm font-medium mb-2">
-              Amount (SOL):
-            </label>
-            <input
-              type="number"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              className="bg-gray-700 text-white p-2 rounded-lg w-full"
-              placeholder="Enter amount in SOL"
-            />
-          </div>
-          <button
-            onClick={handleTransfer}
-            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-          >
-            Transfer SOL
-          </button>
-
           <div className="flex justify-center mt-8">
-            <p className="text-center text-lg font-semibold">Convert Asset</p>
+            <button
+              onClick={() => setShowWormhole((prev) => !prev)}
+              className="px-4 py-2 rounded bg-purple-600 hover:bg-purple-700 text-white"
+            >
+              Convert Asset With Wormhole
+            </button>
+            <button
+              onClick={() => setShowConnectEmbed((prev) => !prev)}
+              className="ml-4 px-4 py-2 rounded bg-purple-600 hover:bg-purple-700 text-white"
+            >
+              Initiate Transaction
+            </button>
           </div>
-          <WormholeConnect
-            config={{ networks: ["ethereum", "solana"] }}
-            theme={{ background: { default: "transparent" } }}
-            onSuccess={(data) => console.log("Connect Success:", data)}
-            onError={(error) => console.error("Connect Error:", error)}
-          />
 
-          <Toaster />
+          {/* Wormhole Connect Display */}
+          {showWormhole && (
+            <div className="bg-gray-800 rounded-lg p-6 shadow-lg mt-6">
+              <h2 className="text-xl font-bold mb-4"> Connect with Wormhole</h2>
+              <WormholeConnect />
+
+              <Toaster />
+            </div>
+          )}
+
+          {/* Connect Embed Display */}
+          {showConnectEmbed && (
+            <div className="rounded-lg p-6 shadow-lg mt-6 flex justify-center items-center flex-col">
+              <h2 className="text-xl font-bold mb-4">Connect Embed</h2>
+              <ConnectEmbed
+                client={client}
+                showThirdwebBranding={false}
+                wallets={wallet}
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>
