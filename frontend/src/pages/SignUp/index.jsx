@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import signUpImage from "../../assets/2.jpeg";
+
 import Solflare from "@solflare-wallet/sdk";
 import { toast, Toaster } from "react-hot-toast";
 
@@ -17,7 +18,7 @@ const SignUp = () => {
   const [loading, setLoading] = useState(false); // Add loading state
   const navigate = useNavigate();
 
-  const wallet = new Solflare();
+  // const wallet = new Solflare();
 
   const handleConnect = async () => {
     try {
