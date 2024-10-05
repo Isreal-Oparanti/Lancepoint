@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import signUpImage from "../../assets/2.jpeg";
 import Solflare from "@solflare-wallet/sdk";
 import { toast, Toaster } from "react-hot-toast";
@@ -71,7 +71,7 @@ const SignUp = () => {
       toast.success("Sign up Successful!!!");
 
       setLoading(false); // Stop loading after success
-      // navigate("/login");
+      navigate("/login");
     } catch (error) {
       console.error("Signup failed:", error.response?.data || error.message);
       setError(
@@ -185,6 +185,12 @@ const SignUp = () => {
                   {loading ? "Signing Up..." : "Sign Up"}{" "}
                   {/* Show loading text */}
                 </button>
+              </div>
+              <div className="text-white mt-4 mx-auto text-center">
+                Have an account already?{" "}
+                <Link to="/login" className="text-blue-400 hover:underline">
+                  Sign In
+                </Link>
               </div>
             </form>
           </div>

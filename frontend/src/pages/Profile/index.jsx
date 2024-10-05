@@ -25,6 +25,7 @@ const Profile = () => {
           { profileId }
         );
         const userData = response.data;
+        console.log(userData, "data");
         setUserProfile(userData);
         setUpdatedSkills(userData.skills || []);
         setDescription(userData.description || "");

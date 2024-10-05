@@ -1,19 +1,38 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import HomeIcon from "/src/assets/LancepointLogo.svg";
 import { toast, Toaster } from "react-hot-toast";
+import axios from "axios";
+import { AuthContext } from "../../context/auth";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [walletAddress, setWalletAddress] = useState("");
+  const { auth } = useContext(AuthContext);
+  const [userProfile, setUserProfile] = useState(null);
 
   useEffect(() => {
-    // Retrieve the wallet address from localStorage
-    const storedWalletAddress = localStorage.getItem("walletAddress");
-    if (storedWalletAddress) {
-      setWalletAddress(storedWalletAddress);
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.post(
+          "http://localhost:5000/api/get-profile",
+          { profileId: auth?.user?._id }
+        );
+        const userData = response.data;
+        console.log("fetched wallet and user profile", userData);
+        setUserProfile(userData);
+        if (userData.wallet) {
+          setWalletAddress(userData.wallet);
+        }
+      } catch (error) {
+        console.error("Failed to fetch user data:", error);
+      }
+    };
+
+    if (auth?.user?._id) {
+      fetchUserData();
     }
-  }, []);
+  }, [auth]);
 
   const copyToClipboard = () => {
     if (walletAddress) {
@@ -27,9 +46,11 @@ const Navbar = () => {
   };
 
   const formattedAddress =
-    walletAddress.substring(0, 5) +
-    "..." +
-    walletAddress.substring(walletAddress.length - 5);
+    walletAddress.length > 0
+      ? walletAddress.substring(0, 5) +
+        "..." +
+        walletAddress.substring(walletAddress.length - 5)
+      : "";
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -39,7 +60,7 @@ const Navbar = () => {
     <>
       <Toaster />
       <header className="bg-opacity-90 mx-auto p-2 bg-primary-dark text-white rounded-full border-2 border-stone-500">
-        <nav className="flex justify-between  items-center w-[90%] mx-auto md:flex-row flex-col">
+        <nav className="flex justify-between items-center w-[90%] mx-auto md:flex-row flex-col">
           <div className="flex justify-between w-full md:w-auto items-center">
             <img src={HomeIcon} alt="Home Icon" width="92" height="92" />
             <button
@@ -60,7 +81,7 @@ const Navbar = () => {
           </div>
 
           <div
-            className={`md:flex   md:flex-row md:items-center flex-col md:static absolute w-full left-0 md:min-h-fit min-h-[60vh] bg-primary-dark transition-all duration-500 ${
+            className={`md:flex md:flex-row md:items-center flex-col md:static absolute w-full left-0 md:min-h-fit min-h-[60vh] bg-primary-dark transition-all duration-500 ${
               isMenuOpen ? "top-[60px]" : "top-[-100%]"
             } md:space-x-8 space-y-4 md:space-y-0 items-center md:w-auto p-5 md:p-0`}
           >
@@ -77,7 +98,7 @@ const Navbar = () => {
               </li>
             </ul>
 
-            <div className="whitespace-nowrap">
+            {/* <div className="whitespace-nowrap">
               {walletAddress ? (
                 <p
                   className="cursor-pointer text-purple-500"
@@ -89,7 +110,7 @@ const Navbar = () => {
               ) : (
                 <p>No wallet connected</p>
               )}
-            </div>
+            </div> */}
           </div>
         </nav>
       </header>
