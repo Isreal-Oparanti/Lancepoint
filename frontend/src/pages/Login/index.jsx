@@ -25,7 +25,7 @@ const Login = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:5000/api/login', { email, password });
+      const response = await axios.post('https://x-ploit-backend-4.onrender.com/api/login', { email, password });
 
        
       const { user, token } = response.data;

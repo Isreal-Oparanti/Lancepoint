@@ -18,8 +18,8 @@ function Job() {
        
       try {
         const [jobsResponse, appliedResponse] = await Promise.all([
-          axios.get('http://localhost:5000/api/get-jobs'),
-          axios.post(`http://localhost:5000/api/get-apply-jobs`, { userId })
+          axios.get('https://x-ploit-backend-4.onrender.com/api/get-jobs'),
+          axios.post(`https://x-ploit-backend-4.onrender.com/api/get-apply-jobs`, { userId })
         ]);
         
         setJobs(jobsResponse.data);
@@ -37,7 +37,7 @@ function Job() {
     try {
       const userId = auth.user._id; // Get the logged-in user's ID
 
-      const response = await axios.post('http://localhost:5000/api/apply', {
+      const response = await axios.post('https://x-ploit-backend-4.onrender.com/api/apply', {
         jobId,
         userId,
       });

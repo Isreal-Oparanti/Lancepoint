@@ -65,7 +65,7 @@ const SignUp = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/register",
+        "https://x-ploit-backend-4.onrender.com/api/register",
         payload
       );
       console.log("Signup successful:", response.data);
