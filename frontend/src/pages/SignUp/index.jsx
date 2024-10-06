@@ -18,7 +18,7 @@ const SignUp = () => {
   const [loading, setLoading] = useState(false); // Add loading state
   const navigate = useNavigate();
 
-  // const wallet = new Solflare();
+  const wallet = new Solflare();
 
   const handleConnect = async () => {
     try {
