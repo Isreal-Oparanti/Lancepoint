@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import { AuthContext } from "../../context/auth";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
@@ -10,6 +10,16 @@ import { ConnectEmbed } from "thirdweb/react";
 import { client } from "../../client";
 import { createWallet } from "thirdweb/wallets";
 import { Toaster } from "react-hot-toast";
+import {
+  Connection,
+  Keypair,
+  PublicKey,
+  SystemProgram,
+  LAMPORTS_PER_SOL,
+  Transaction,
+} from "@solana/web3.js";
+
+import Transactions from "../../components/transaction";
 
 const YourGigsPage = () => {
   const { auth } = useContext(AuthContext);
@@ -50,11 +60,14 @@ const YourGigsPage = () => {
     const review = reviews[applicantId];
 
     try {
-      await axios.post(`https://x-ploit-backend-4.onrender.com/api/save-review`, {
-        applicantId,
-        rating: review.rating,
-        feedback: review.feedback,
-      });
+      await axios.post(
+        `https://x-ploit-backend-4.onrender.com/api/save-review`,
+        {
+          applicantId,
+          rating: review.rating,
+          feedback: review.feedback,
+        }
+      );
       toast.success("Review submitted successfully!");
     } catch (error) {
       console.error("Error submitting review:", error);
@@ -115,10 +128,13 @@ const YourGigsPage = () => {
     try {
       if (!accepted) {
         // Start order (accept application)
-        await axios.post("https://x-ploit-backend-4.onrender.com/api/accept-application", {
-          applicantId,
-          jobId,
-        });
+        await axios.post(
+          "https://x-ploit-backend-4.onrender.com/api/accept-application",
+          {
+            applicantId,
+            jobId,
+          }
+        );
         toast.success("Application accepted!");
         setPending(true);
 
@@ -129,10 +145,13 @@ const YourGigsPage = () => {
         ]);
       } else {
         // Cancel order (cancel application)
-        await axios.post("https://x-ploit-backend-4.onrender.com/api/cancel-application", {
-          applicantId,
-          jobId,
-        });
+        await axios.post(
+          "https://x-ploit-backend-4.onrender.com/api/cancel-application",
+          {
+            applicantId,
+            jobId,
+          }
+        );
         toast.success("Application canceled!");
         setPending(false);
 
@@ -161,10 +180,27 @@ const YourGigsPage = () => {
     console.log(a);
   };
 
+  const modalRef = useRef(null);
+
+  const handleOutsideClick = (event) => {
+    if (modalRef.current && !modalRef.current.contains(event.target)) {
+      setShowConnectEmbed(false);
+    }
+  };
+
+  useEffect(() => {
+    // Attach the event listener
+    document.addEventListener("mousedown", handleOutsideClick);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, []);
+
   return (
     <div className="min-h-screen flex text-white">
       <Sidebar />
-
       <div className="p-6 flex-1 ml-[220px]">
         <Navbar />
 
@@ -389,7 +425,6 @@ const YourGigsPage = () => {
               ))}
             </div>
           )}
-
           {showWormhole && (
             <div className="bg-gray-800 rounded-lg p-6 shadow-lg mt-6">
               <h2 className="text-xl font-bold mb-4"> Connect with Wormhole</h2>
@@ -398,16 +433,18 @@ const YourGigsPage = () => {
               <Toaster />
             </div>
           )}
-
           {/* Connect Embed Display */}
           {showConnectEmbed && (
-            <div className="rounded-lg p-6 shadow-lg mt-6 flex justify-center items-center flex-col">
-              <h2 className="text-xl font-bold mb-4">Connect Embed</h2>
-              <ConnectEmbed
-                client={client}
-                showThirdwebBranding={false}
-                wallets={wallet}
-              />
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+              <div className="rounded-lg p-6 shadow-lg bg-white mt-6 flex justify-center items-center flex-col w-full max-w-[400px] ">
+                <button
+                  className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
+                  onClick={() => setShowConnectEmbed(false)}
+                >
+                  &times;
+                </button>
+                <Transactions closeModal={() => setShowConnectEmbed(false)} />
+              </div>
             </div>
           )}
         </div>
