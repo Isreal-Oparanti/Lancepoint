@@ -1,12 +1,13 @@
 import React,{ useContext } from 'react';
 import { Link } from 'react-router-dom';
-import HomeIcon from '/src/assets/Home.svg';
-import BrowseJobs from '/src/assets/Browse Jobs.svg';
-import YourGigs from '/src/assets/Your Jobs.svg';
-import Application from '/src/assets/Job Applications.svg';
-import Create from '/src/assets/Create Jobs.svg';
-import Profile from '/src/assets/iconamoon_profile.svg';
-import Logout from '/src/assets/icons.svg';
+import HomeIcon from '@/assets/Home.svg';
+import BrowseJobs from '@/assets/Browse Jobs.svg';
+import YourGigs from '@/assets/Your Jobs.svg';
+import Application from '@/assets/Job Applications.svg';
+import Create from '@/assets/Create Jobs.svg';
+import Profile from '@/assets/iconamoon_profile.svg';
+import Logout from '@/assets/icons.svg';
+
 import { AuthContext } from '../../context/auth';
 
  

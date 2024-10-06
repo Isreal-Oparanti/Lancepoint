@@ -21,7 +21,7 @@ const Profile = () => {
     const fetchUserProfile = async () => {
       try {
         const response = await axios.post(
-          "http://localhost:5000/api/get-profile",
+          "https://x-ploit-backend-4.onrender.com/api/get-profile",
           { profileId }
         );
         const userData = response.data;
@@ -64,7 +64,7 @@ const Profile = () => {
       };
 
       const response = await axios.put(
-        "http://localhost:5000/api/update",
+        "https://x-ploit-backend-4.onrender.com/api/update",
         updatedUser
       );
       const newData = response.data;

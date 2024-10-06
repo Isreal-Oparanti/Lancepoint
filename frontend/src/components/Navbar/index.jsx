@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
-import HomeIcon from "/src/assets/LancepointLogo.svg";
+import HomeIcon from "@/assets/LancepointLogo.svg";
 import { toast, Toaster } from "react-hot-toast";
 import axios from "axios";
 import { AuthContext } from "../../context/auth";
@@ -15,7 +15,7 @@ const Navbar = () => {
     const fetchUserData = async () => {
       try {
         const response = await axios.post(
-          "http://localhost:5000/api/get-profile",
+          "https://x-ploit-backend-4.onrender.com/api/get-profile",
           { profileId: auth?.user?._id }
         );
         const userData = response.data;

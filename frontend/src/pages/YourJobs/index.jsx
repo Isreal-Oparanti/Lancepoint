@@ -50,7 +50,7 @@ const YourGigsPage = () => {
     const review = reviews[applicantId];
 
     try {
-      await axios.post(`http://localhost:5000/api/save-review`, {
+      await axios.post(`https://x-ploit-backend-4.onrender.com/api/save-review`, {
         applicantId,
         rating: review.rating,
         feedback: review.feedback,
@@ -68,7 +68,7 @@ const YourGigsPage = () => {
         const jobIds = auth.user.jobs || [];
         if (jobIds.length > 0) {
           const response = await axios.post(
-            "http://localhost:5000/api/get-job",
+            "https://x-ploit-backend-4.onrender.com/api/get-job",
             { jobIds }
           );
           setUserJobs(response.data.jobs);
@@ -87,7 +87,7 @@ const YourGigsPage = () => {
     if (!applicants[job._id]) {
       try {
         const response = await axios.post(
-          "http://localhost:5000/api/get-user",
+          "https://x-ploit-backend-4.onrender.com/api/get-user",
           {
             applicantIds: job.applied,
           }
@@ -115,7 +115,7 @@ const YourGigsPage = () => {
     try {
       if (!accepted) {
         // Start order (accept application)
-        await axios.post("http://localhost:5000/api/accept-application", {
+        await axios.post("https://x-ploit-backend-4.onrender.com/api/accept-application", {
           applicantId,
           jobId,
         });
@@ -129,7 +129,7 @@ const YourGigsPage = () => {
         ]);
       } else {
         // Cancel order (cancel application)
-        await axios.post("http://localhost:5000/api/cancel-application", {
+        await axios.post("https://x-ploit-backend-4.onrender.com/api/cancel-application", {
           applicantId,
           jobId,
         });

@@ -37,7 +37,7 @@ const ApplicationPage = () => {
     const fetchUserData = async () => {
       try {
         const response = await axios.post(
-          "http://localhost:5000/api/get-profile",
+          "https://x-ploit-backend-4.onrender.com/api/get-profile",
           { profileId: auth?.user?._id }
         );
         const userData = response.data;
@@ -57,7 +57,7 @@ const ApplicationPage = () => {
     const fetchData = async () => {
       try {
         const response = await axios.post(
-          "http://localhost:5000/api/get-profile",
+          "https://x-ploit-backend-4.onrender.com/api/get-profile",
           {
             profileId: auth?.user?._id,
           }
@@ -83,7 +83,7 @@ const ApplicationPage = () => {
         if (order) {
           setJobId(order.id);
           const response = await axios.post(
-            "http://localhost:5000/api/get-job",
+            "https://x-ploit-backend-4.onrender.com/api/get-job",
             { jobIds: [order.id] }
           );
           if (response.data.jobs && response.data.jobs.length > 0) {
@@ -114,7 +114,7 @@ const ApplicationPage = () => {
           : order
       );
 
-      await axios.post("http://localhost:5000/api/update-order", {
+      await axios.post("https://x-ploit-backend-4.onrender.com/api/update-order", {
         userId: auth.user._id,
         orders: updatedOrders,
       });

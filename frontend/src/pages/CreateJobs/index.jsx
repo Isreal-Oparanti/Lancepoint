@@ -27,7 +27,7 @@ function CreateGig() {
     const dataToSubmit = { ...jobsData, userId: auth.user._id };
 
     try {
-      const response = await axios.post(`http://localhost:5000/api/create-jobs`, dataToSubmit);
+      const response = await axios.post(`https://x-ploit-backend-4.onrender.com/api/create-jobs`, dataToSubmit);
       const newJob = response.data;
 
       
