@@ -51,9 +51,9 @@ function App() {
         <Router>
           
           <Routes>
-             <Route path="/" element={<SignUp/>} />
+             <Route path="/" element={<Home/>} />
              <Route path="/login" element={<Login/>} />
-             <Route path="/home" element={<Home/>} />
+             <Route path="/signup" element={<SignUp/>} />
              <Route path="/createjobs" element={<CreateGig/>} />
              <Route path="/jobs" element={<Jobs/>} />
              <Route path="/profile" element={<Profile/>} />

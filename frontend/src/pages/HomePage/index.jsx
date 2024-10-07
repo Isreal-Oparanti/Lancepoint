@@ -22,8 +22,9 @@ const Home = () => {
                     </div>
 
                     <div className="font-bold text-white text-center mt-10 mb-[8.5rem]">
-                        <Link to={'/jobs'}><button className="font-bold bg-primary-dark p-4 px-12 rounded-full">Browse Jobs</button></Link>
+                        <Link to={'/signup'}><button className="font-bold bg-primary-dark p-4 px-12 rounded-full">Create Account</button></Link>
                     </div>
+                     
 
         </div>           
         </>
