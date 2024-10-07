@@ -9,7 +9,7 @@ const Home = () => {
   };
 
   return (
-    <div className="p-6 min-h-screen  flex flex-col justify-center items-center">
+    <div className="p-6 min-h-screen bg-white flex flex-col justify-center items-center">
       <div className="space-grotesk-font text-primary-dark text-center mx-auto mt-10 text-3xl md:text-4xl lg:text-5xl font-semibold w-full max-w-lg">
         Hiring And <span className="text-primary-dark">Outsourcing</span> like never before
       </div>
