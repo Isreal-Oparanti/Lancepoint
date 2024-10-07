@@ -30,7 +30,7 @@ const SideNav = () => {
       <ul className="space-y-6 text-white mt-10">
         <li className="flex gap-2 hover:bg-purple-dark p-1 pl-6 rounded">
 {/*           <img src={HomeIcon} alt="Home Icon" width="20" height="20" />  */}
-          <Link to="/home" className="hover:text-blue-400 font-semi-bold">Home</Link>
+          <Link to="/" className="hover:text-blue-400 font-semi-bold">Home</Link>
         </li>
         <li className="flex gap-2 hover:bg-purple-dark p-1 pl-6 rounded">
 {/*           <img src={Create} alt="Home Icon" width="20" height="20" /> */}
