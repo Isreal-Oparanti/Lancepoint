@@ -7,17 +7,12 @@ LancePoint is a revolutionary platform designed to streamline on-chain payments 
 
 - **On-chain Payments**: Utilize smart contracts to facilitate secure and transparent transactions between clients and workers, eliminating the need for intermediaries and reducing the risk of fraud.
 
-- **Anonymity and Privacy**: Protect user privacy by enabling anonymous interactions between clients and workers while still ensuring transparency and accountability through on-chain ratings and reputation management.
-
 - **Worker Reputation Control**: Empower workers to take control of their reputation by providing them with the ability to build and maintain their on-chain reputation, which can be accessed and verified by potential clients.
 
-- **Deposit and Withdrawal Functionality**: Enable users to deposit funds into the platform using supported cryptocurrencies and withdraw funds securely through smart contracts.
-
-- **Job Posting and Selection**: Allow clients to post job openings on the platform and review CVs submitted by interested workers. Clients can then select the most suitable worker for the job based on their qualifications and experience.
+- **Job Posting and Selection**: Allow clients to post job openings on the platform and and review the POW (Proof of Work) of interested workers. Clients can then select the most suitable worker for the job based on their  experience.
 
 - **Agreement and Assignment**: Facilitate agreement between clients and workers on job terms through cryptographic signatures, and automate the assignment of jobs to selected workers through smart contracts.
 
-- **Dispute Resolution**: Implement a fair and transparent dispute resolution mechanism that enables the platform to intervene and resolve disputes between clients and workers in cases of dishonest behavior or breach of contract.
 
 #### Mission Statement
 
@@ -29,7 +24,7 @@ We envision a future where freelancers have full control over their reputation a
 
 #### Target Audience
 
-Our platform is designed for freelancers and clients across various industries who are seeking a secure, transparent, and efficient way to engage in business transactions. Whether you're a freelance developer, designer, writer, or consultant, or a client in need of professional services, [Your Application Name] provides the tools and infrastructure you need to succeed in the digital marketplace.
+Our platform is designed for freelancers and clients across various industries who are seeking a secure, transparent, and efficient way to engage in business transactions. Whether you're a freelance developer, designer, writer, or consultant, or a client in need of professional services, Lancepoint provides the tools and infrastructure you need to succeed in the digital marketplace.
 
 
 Certainly! Here's a suggested control flow for your application, broken down into steps:
