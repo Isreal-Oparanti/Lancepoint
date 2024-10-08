@@ -4,20 +4,27 @@ import axios from "axios";
 import SideNav from "../../components/Sidebar";
 import Navbar from "../../components/Navbar";
 import { AuthContext } from "../../context/auth";
+import { useOkto } from "okto-sdk-react";
 
 const Profile = () => {
   const { auth, setAuth } = useContext(AuthContext);
   const { id } = useParams();
   const [userProfile, setUserProfile] = useState(null);
+  const [oktoUserDetails, setOktoUserDetails] = useState(null); // State for Okto user details
   const [editMode, setEditMode] = useState(false);
   const [newSkill, setNewSkill] = useState("");
+  const [copyButtonText, setCopyButtonText] = useState("Copy");
 
   const isOwnerProfile = !id || id === auth?.user?._id;
   const profileId = id ? id : auth.user._id;
 
   const [updatedSkills, setUpdatedSkills] = useState([]);
   const [description, setDescription] = useState("");
+
+  const { getUserDetails } = useOkto();
+
   useEffect(() => {
+    // Fetch profile from your backend
     const fetchUserProfile = async () => {
       try {
         const response = await axios.post(
@@ -25,7 +32,6 @@ const Profile = () => {
           { profileId }
         );
         const userData = response.data;
-        console.log(userData, "data");
         setUserProfile(userData);
         setUpdatedSkills(userData.skills || []);
         setDescription(userData.description || "");
@@ -35,7 +41,19 @@ const Profile = () => {
     };
 
     fetchUserProfile();
-  }, [profileId]);
+
+    // Fetch Okto user details
+    const fetchOktoUserDetails = async () => {
+      try {
+        const details = await getUserDetails();
+        setOktoUserDetails(details);
+      } catch (error) {
+        console.error("Failed to fetch Okto user details:", error);
+      }
+    };
+
+    fetchOktoUserDetails();
+  }, [profileId, getUserDetails]);
 
   const handleEditClick = () => {
     setEditMode(!editMode);
@@ -71,7 +89,6 @@ const Profile = () => {
 
       if (isOwnerProfile) {
         setAuth({ user: newData });
-
         localStorage.setItem("user", JSON.stringify(newData));
       }
 
@@ -81,11 +98,21 @@ const Profile = () => {
     }
   };
 
-  return (
-    <div className="flex min-h-screen">
-      <SideNav />
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(userProfile.wallet);
+      setCopyButtonText("Copied!");
+      setTimeout(() => setCopyButtonText("Copy"), 2000);
+    } catch (err) {
+      console.error("Failed to copy: ", err);
+    }
+  };
 
-      <div className="p-6 flex-1 ml-[220px]">
+  return (
+    <div className="flex min-h-screen text-gray-300">
+      {/* <SideNav /> */}
+
+      <div className="p-6 flex-1 ml-[12]">
         <Navbar />
 
         <div className="w-[80%] ml-20 border-1 rounded-xl p-6 bg-primary-dark text-white mt-5">
@@ -94,20 +121,46 @@ const Profile = () => {
             {isOwnerProfile && (
               <button
                 onClick={handleEditClick}
-                className="bg-purple-dark text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition"
+                className="text-white py-2 px-4 rounded-lg transition"
               >
-                {editMode ? "Cancel" : "Edit"}
+                {editMode ? (
+                  <i className="fa-solid text-xl fa-times"></i>
+                ) : (
+                  <i className="fa-solid text-xl fa-edit"></i>
+                )}
               </button>
             )}
           </div>
 
           {userProfile ? (
-            <div className="p-4 rounded-lg shadow">
-              <h2 className="text-2xl font-semibold">
+            <div className="flex flex-col space-y-4 p-4 rounded-lg shadow">
+              <h2 className="text-2xl font-semibold capitalize">
                 {userProfile.firstname + " " + userProfile.lastname}
               </h2>
-              <p>{userProfile.email}</p>
-              <p>{userProfile.wallet}</p>
+              <p>
+                <span className="font-semibold">Email: </span>
+                <span className="text-gray-200">{userProfile.email}</span>
+              </p>
+              <p>
+                <span className="font-semibold">Wallet Address:</span>{" "}
+                <span className="text-green-500 font-[monospace] text-sm">
+                  {userProfile.wallet}
+                </span>
+                <button
+                  onClick={copyToClipboard}
+                  className="ml-2 bg-transparent border-2 border-green-600 rounded-xl text-white text-xs px-2 py-1 transition"
+                >
+                  {copyButtonText}
+                </button>
+              </p>
+
+              {/* Display Okto User Details */}
+              {oktoUserDetails && (
+                <div>
+                  <h3 className="text-xl font-semibold">Okto User Details:</h3>
+                  <pre>{JSON.stringify(oktoUserDetails, null, 2)}</pre>
+                </div>
+              )}
 
               <div className="mt-4">
                 <h3 className="text-xl font-semibold">Description</h3>
@@ -127,11 +180,11 @@ const Profile = () => {
               <div className="mt-4">
                 <h3 className="text-xl font-semibold">Skills</h3>
                 {!editMode ? (
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-4">
                     {updatedSkills.map((skill, index) => (
                       <span
                         key={index}
-                        className="bg-purple-600 px-2 py-1 rounded text-sm"
+                        className="bg-purple-600 mt-4 px-2 py-1 rounded text-sm"
                       >
                         {skill}
                       </span>
@@ -153,7 +206,7 @@ const Profile = () => {
                       +
                     </button>
 
-                    <div className="flex flex-wrap gap-2 mt-2">
+                    <div className="flex flex-wrap gap-3 mt-4">
                       {updatedSkills.map((skill, index) => (
                         <span
                           key={index}
@@ -186,32 +239,6 @@ const Profile = () => {
             <p>Loading profile...</p>
           )}
         </div>
-        {/* Reviews Section */}
-        {auth.user.reviews && auth.user.reviews.length > 0 && (
-          <p className="font-bold ml-20 text-white mt-5 text-2xl">
-            Proof of Work
-          </p>
-        )}
-        {auth.user.reviews && auth.user.reviews.length > 0 && (
-          <div className="w-[80%] ml-20 border-1 rounded-xl p-6 bg-primary-dark text-white mt-2">
-            <h3 className="text-xl font-semibold">Reviews</h3>
-            {auth.user.reviews.map((review, index) => (
-              <div key={index} className="mt-3 border-b border-gray-600 pb-2">
-                <div className="flex justify-between items-center">
-                  <span className="text-yellow-400 font-bold">
-                    {review.rating} ⭐
-                  </span>
-                  <span className="text-sm text-gray-400">
-                    {new Date(review.createdAt).toLocaleDateString()}
-                  </span>
-                </div>
-                <p className="text-white">
-                  {review.feedback || "No feedback provided"}
-                </p>
-              </div>
-            ))}
-          </div>
-        )}
       </div>
     </div>
   );

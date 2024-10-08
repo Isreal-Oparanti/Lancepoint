@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import signUpImage from "../../assets/2.jpeg";
+import signUpImage from "../../assets/BG.png";
 
 import Solflare from "@solflare-wallet/sdk";
 import { toast, Toaster } from "react-hot-toast";
@@ -91,11 +91,12 @@ const SignUp = () => {
         id="container"
         className="flex flex-col lg:flex-row justify-center w-full max-h-screen"
       >
+        {/* Form Container */}
         <div className="flex-1 bg-primary-dark flex items-center justify-center p-4 overflow-auto">
-          <div className="bg-opacity-10 mt-10 flex justify-center bg-secondary-dark bg-blur py-8 mx-auto shadow rounded-lg px-4 w-full max-w-md relative border-2 border-stone-700">
+          <div className="bg-opacity-10 mt-8 flex justify-center bg-secondary-dark bg-blur py-5 mx-auto shadow rounded-lg px-4 w-full max-w-lg relative border-2 border-stone-700">
             <form
               onSubmit={handleFormSubmit}
-              className="flex flex-col justify-center space-y-4 w-full"
+              className="flex flex-col justify-center space-y-3 w-full"
             >
               <div className="text-white mt-2 text-center text-xl font-semibold">
                 Sign Up
@@ -149,7 +150,7 @@ const SignUp = () => {
                   placeholder="Tell us about yourself and what you do ..."
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="appearance-none placeholder:text-slate-400 text-slate-300 bg-slate-700 block w-full px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm resize-none h-24"
+                  className="appearance-none placeholder:text-slate-400 text-slate-300 bg-slate-700 block w-full px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm resize-none h-17"
                 ></textarea>
               </div>
 
@@ -166,8 +167,8 @@ const SignUp = () => {
                     isWalletConnected ? "opacity-50 cursor-not-allowed" : ""
                   }`}
                 >
-                  <img src="Group.png" width={30} height={30} alt="Solflare" />
-                  <span className="text-[17px]">
+                  <img src="Group.png" width={20} height={20} alt="Solflare" />
+                  <span className="text-[12px]">
                     {isWalletConnected ? "Wallet Connected" : "Solflare"}
                   </span>
                 </button>
@@ -187,7 +188,7 @@ const SignUp = () => {
                   {/* Show loading text */}
                 </button>
               </div>
-              <div className="text-white mt-4 mx-auto text-center">
+              <div className="text-white mt-2 mx-auto text-center">
                 Have an account already?{" "}
                 <Link to="/login" className="text-blue-400 hover:underline">
                   Sign In
@@ -197,6 +198,7 @@ const SignUp = () => {
           </div>
         </div>
 
+        {/* Sign Up Image */}
         <div className="hidden lg:flex lg:flex-1">
           <img
             src={signUpImage}

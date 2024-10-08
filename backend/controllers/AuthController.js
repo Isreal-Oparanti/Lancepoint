@@ -70,8 +70,8 @@ exports.login = async function (req, res) {
         .json({ message: "Please fill in all required fields." });
     }
 
-    // Find user by email
-    const user = await UserModel.findOne({ email });
+    // Find user by email with proper error handling
+    const user = await UserModel.findOne({ email }).exec(); // .exec() can help with performance
 
     if (!user) {
       return res.status(404).json({ error: "User does not exist." });
@@ -84,25 +84,18 @@ exports.login = async function (req, res) {
       return res.status(400).json({ error: "Wrong password." });
     }
 
-    // // Generate JWT token
-    // const token = jwt.sign(
-    //   {
-    //     userId: user._id,
-    //     email: user.email
-    //   },
-    //   process.env.JWT_SECRET,
-    //   { expiresIn: '24h' }
-    // );
+    // Generate JWT token if needed
+    // const token = jwt.sign({ userId: user._id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '24h' });
 
-    return res.status(200).json({ message: "Login Successful", user: user });
+    return res.status(200).json({ message: "Login Successful", user }); // Include token if needed
   } catch (error) {
+    console.error("Login error:", error); // Log for debugging
     return res
       .status(500)
       .json({ error: "Login failed.", message: error.message });
   }
 };
 
-// Update user information
 // Controller for updating user data
 exports.updateUser = async (req, res) => {
   try {

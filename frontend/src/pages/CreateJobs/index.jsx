@@ -24,7 +24,7 @@ function CreateGig() {
     event.preventDefault();
 
     const dataToSubmit = { ...jobsData, userId: auth.user._id };
-
+    console.log(dataToSubmit);
     try {
       const response = await fetch(
         "https://x-ploit-backend-4.onrender.com/api/create-jobs",
@@ -32,7 +32,6 @@ function CreateGig() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.token}`, // Optional if auth token is required
           },
           body: JSON.stringify(dataToSubmit),
         }
@@ -74,9 +73,9 @@ function CreateGig() {
 
   return (
     <div className="flex min-h-screen">
-      <SideNav />
+      {/* <SideNav /> */}
 
-      <div className="p-6 flex-1 ml-[220px]">
+      <div className="p-6 flex-1 md:ml-[12rem] lg:ml-[12rem]">
         <Navbar />
         <div className="bg-primary-dark  sm:w-[60%] lg:w-[50%] bg-blur py-8 mx-auto mt-5 rounded-[20px] border-2 border-stone-500 text-secondary-dark">
           <form
