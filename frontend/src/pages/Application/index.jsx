@@ -145,7 +145,7 @@ const ApplicationPage = () => {
 
   return (
     <div className="min-h-screen flex text-white">
-      <div className="p-6 flex-1 ml-[220px]">
+      <div className="p-6 flex-1 md:ml-[12rem] lg:ml-[12rem]">
         <Navbar />
 
         <div className="p-6">

@@ -109,7 +109,7 @@ const Profile = () => {
   };
 
   return (
-    <div className="flex min-h-screen text-gray-300">
+    <div className="flex min-h-screen text-gray-300 mb-4">
       {/* <SideNav /> */}
 
       <div className="p-6 flex-1 md:ml-[12rem] lg:ml-[12rem]">

@@ -6,6 +6,6 @@
   background: url("../src/assets/1.jpeg") rgba(128, 128, 128, 0.5);
   /* background-blend-mode: screen; */
   background-size: cover;
-  padding-bottom: 60px;
+  
   box-sizing: border-box;
 }

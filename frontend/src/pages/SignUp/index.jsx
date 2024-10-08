@@ -43,12 +43,13 @@ const SignUp = () => {
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     setError("");
-    setLoading(true); // Set loading to true when form is submitted
+    setLoading(true);
 
     if (!firstname || !lastname || !email || !password || !walletAddress) {
-      setError("Please fill in all required fields.");
-      toast.error("Please fill in all required fields.");
-      setLoading(false); // Stop loading on error
+      const missingFieldError = "Please fill in all required fields.";
+      setError(missingFieldError);
+      toast.error(missingFieldError, { duration: 5000, position: "top-right" });
+      setLoading(false);
       return;
     }
 
@@ -58,30 +59,23 @@ const SignUp = () => {
       email,
       password,
       description,
-      wallet: walletAddress, // Add walletAddress to the payload
+      wallet: walletAddress,
     };
-
-    console.log("Sent payload:", payload); // Log the payload before sending
 
     try {
       const response = await axios.post(
         "https://x-ploit-backend-4.onrender.com/api/register",
         payload
       );
-      console.log("Signup successful:", response.data);
-      toast.success("Sign up Successful!!!");
-
-      setLoading(false); // Stop loading after success
+      toast.success("Sign up Successful!", { position: "top-right" });
+      setLoading(false);
       navigate("/login");
     } catch (error) {
-      console.error("Signup failed:", error.response?.data || error.message);
-      setError(
-        error.response?.data?.message || "Signup failed. Please try again."
-      );
-      toast.error(
-        error.response?.data?.message || "Signup failed. Please try again."
-      );
-      setLoading(false); // Stop loading after error
+      const errorMessage =
+        error.response?.data?.message || "Signup failed. Please try again.";
+      setError(errorMessage);
+      toast.error(errorMessage, { duration: 5000, position: "top-right" });
+      setLoading(false);
     }
   };
 

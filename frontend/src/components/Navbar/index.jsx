@@ -57,7 +57,9 @@ const Navbar = () => {
         <nav className="flex justify-between items-center w-[90%] mx-auto flex-row">
           {/* Logo Section */}
           <div className="flex items-center space-x-3">
-            <img src={HomeIcon} alt="Home Icon" width="92" height="92" />
+            <Link to="/">
+              <img src={HomeIcon} alt="Home Icon" width="92" height="92" />
+            </Link>
           </div>
 
           {/* Search Box - Hidden on medium and smaller screens */}
@@ -72,7 +74,10 @@ const Navbar = () => {
 
           {/* Logout Section - Visible on all screens */}
           <div className="flex items-center space-x-3">
-            <Link to="/login" className="hover:text-blue-400 font-semi-bold flex items-center">
+            <Link
+              to="/login"
+              className="hover:text-blue-400 font-semi-bold flex items-center"
+            >
               <i className="fa-solid fa-right-from-bracket"></i>
               <span className="ml-1">Logout</span>
             </Link>

@@ -200,8 +200,7 @@ const YourGigsPage = () => {
 
   return (
     <div className="min-h-screen flex text-white">
-      {/* <Sidebar /> */}
-      <div className="p-6 flex-1">
+      <div className="p-6 flex-1 md:ml-[12rem] lg:ml-[12rem]">
         <Navbar />
 
         <div className="p-6">
