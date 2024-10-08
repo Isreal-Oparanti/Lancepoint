@@ -17,38 +17,26 @@ const Login = () => {
   const [authToken, setAuthToken] = useState();
 
   const BASE_URL = "https://sandbox-api.okto.tech";
-  const OKTO_CLIENT_API = "02685df5-9511-41ac-988c-a562be6b4264"; // Ensure this API key is correct
+  const OKTO_CLIENT_API = "b9b928ee-9b60-4e34-bb2d-4398dfcb012c"; // Ensure this API key is correct
 
   const handleGoogleLogin = async (credentialResponse) => {
+    console.log("Google login response:", credentialResponse);
+
     const idToken = credentialResponse.credential;
-
-    if (!idToken) {
-      toast.error("Failed to retrieve Google ID token.");
-      return;
-    }
-
-    try {
-      const response = await axios.post(
-        `${BASE_URL}/auth/google`,
-        { idToken },
-        {
-          headers: {
-            "x-api-key": OKTO_CLIENT_API,
-            "Content-Type": "application/json",
-          },
+    console.log(idToken);
+    console.log("google idtoken: ", idToken);
+    authenticate(
+       idToken,
+      async (authResponse, error) => {
+        if (authResponse) {
+          console.log("auth token received", authToken);
+          navigate("/profile");
         }
-      );
-
-      console.log("Okto auth response:", response);
-      setAuthToken(response.data);
-      setAuth({ user: response.data });
-      navigate("/home");
-    } catch (error) {
-      const errorMsg = error?.response?.data?.error?.message || "An error occurred.";
-      const statusCode = error?.response?.status || "Unknown status";
-      console.error("Detailed authentication error:", { errorMsg, statusCode });
-      toast.error(errorMsg);
-    }
+        if (error) {
+          console.error("Authentication error:", error);
+        }
+      }
+    );
   };
 
   const handleFormSubmit = async (event) => {

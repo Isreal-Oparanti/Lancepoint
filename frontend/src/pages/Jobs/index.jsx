@@ -84,7 +84,7 @@ function Job() {
   return (
     <div className="flex min-h-screen">
       {/* <SideNav /> */}
-      <div className="p-6 flex-1 ">
+      <div className="p-6 flex-1 md:ml-[12rem] lg:ml-[12rem]">
         <Navbar />
 
         {jobs.length > 0 ? (
@@ -100,7 +100,7 @@ function Job() {
                 className="bg-primary-dark w-full lg:w-[50%] bg-blur py-8 mx-auto mt-5 rounded-lg border-2 border-stone-500"
               >
                 <div className="flex flex-col space-y-4 px-8">
-                  <h2 className="text-xl font-bold text-white">
+                  <h2 className="text-xl capitalize font-bold text-white">
                     {job.jobTitle}
                   </h2>
 
@@ -140,7 +140,9 @@ function Job() {
             );
           })
         ) : (
-          <div className="font-bold text-white">No available gig</div>
+          <div className="font-semibold m-4 text-center text-white">
+            No available gig
+          </div>
         )}
       </div>
     </div>

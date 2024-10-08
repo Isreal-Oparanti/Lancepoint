@@ -112,10 +112,10 @@ const Profile = () => {
     <div className="flex min-h-screen text-gray-300">
       {/* <SideNav /> */}
 
-      <div className="p-6 flex-1 ml-[12]">
+      <div className="p-6 flex-1 md:ml-[12rem] lg:ml-[12rem]">
         <Navbar />
 
-        <div className="w-[80%] ml-20 border-1 rounded-xl p-6 bg-primary-dark text-white mt-5">
+        <div className="w-[80%] mx-auto lg:ml-20 border-1 rounded-xl p-6 bg-primary-dark text-white mt-5">
           <div className="flex justify-between items-center mb-4">
             <h1 className="text-3xl font-bold">Profile</h1>
             {isOwnerProfile && (
@@ -143,7 +143,7 @@ const Profile = () => {
               </p>
               <p>
                 <span className="font-semibold">Wallet Address:</span>{" "}
-                <span className="text-green-500 font-[monospace] text-sm">
+                <span className="text-green-500 break-words font-[monospace] text-sm">
                   {userProfile.wallet}
                 </span>
                 <button
@@ -154,13 +154,12 @@ const Profile = () => {
                 </button>
               </p>
 
-              {/* Display Okto User Details */}
-              {oktoUserDetails && (
+              {/* {oktoUserDetails && (
                 <div>
                   <h3 className="text-xl font-semibold">Okto User Details:</h3>
                   <pre>{JSON.stringify(oktoUserDetails, null, 2)}</pre>
                 </div>
-              )}
+              )} */}
 
               <div className="mt-4">
                 <h3 className="text-xl font-semibold">Description</h3>

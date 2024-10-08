@@ -114,10 +114,13 @@ const ApplicationPage = () => {
           : order
       );
 
-      await axios.post("https://x-ploit-backend-4.onrender.com/api/update-order", {
-        userId: auth.user._id,
-        orders: updatedOrders,
-      });
+      await axios.post(
+        "https://x-ploit-backend-4.onrender.com/api/update-order",
+        {
+          userId: auth.user._id,
+          orders: updatedOrders,
+        }
+      );
 
       setAuth((prev) => ({
         ...prev,
@@ -142,8 +145,6 @@ const ApplicationPage = () => {
 
   return (
     <div className="min-h-screen flex text-white">
-      
-
       <div className="p-6 flex-1 ml-[220px]">
         <Navbar />
 

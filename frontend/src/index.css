@@ -1,13 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
- 
- 
-#root{
-    
-    background: url('../src/assets/1.jpeg') rgba(128, 128, 128, 0.5);
-    /* background-blend-mode: screen; */
-    background-size: cover;
-    /* background-attachment: fixed; */
-    box-sizing: border-box;
- }
+
+#root {
+  background: url("../src/assets/1.jpeg") rgba(128, 128, 128, 0.5);
+  /* background-blend-mode: screen; */
+  background-size: cover;
+  padding-bottom: 60px;
+  box-sizing: border-box;
+}

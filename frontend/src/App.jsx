@@ -16,10 +16,9 @@ import Jobs from "./pages/Jobs";
 import Profile from "./pages/Profile";
 import YourGigsPage from "./pages/YourJobs";
 import Application from "./pages/Application";
-import  {OktoProvider, BuildType } from "okto-sdk-react";
+import { OktoProvider, BuildType } from "okto-sdk-react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
 
 function App() {
   const OKTO_CLIENT_API_KEY = "b9b928ee-9b60-4e34-bb2d-4398dfcb012c";
