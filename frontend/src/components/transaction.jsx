@@ -1,187 +1,195 @@
-import {
-  WalletAdapterNetwork,
-  WalletNotConnectedError,
-} from "@solana/wallet-adapter-base";
-import {
-  ConnectionProvider,
-  WalletProvider,
-  useWallet,
-} from "@solana/wallet-adapter-react";
-import {
-  WalletModalProvider,
-  WalletMultiButton,
-} from "@solana/wallet-adapter-react-ui";
-import {
-  clusterApiUrl,
-  Transaction,
-  SystemProgram,
-  PublicKey,
-  LAMPORTS_PER_SOL,
-  Connection,
-} from "@solana/web3.js";
+import React, { useState } from "react";
+import { useOkto } from "okto-sdk-react";
+import { useNavigate } from "react-router-dom";
+import ReadData from "./ReadData";
 
-import {
-  LedgerWalletAdapter,
-  PhantomWalletAdapter,
-  SolflareWalletAdapter,
-  TorusWalletAdapter,
-} from "@solana/wallet-adapter-wallets";
+const Transactions = ({ authToken, handleLogout }) => {
+  console.log("HomePage component rendered: ", authToken);
+  const navigate = useNavigate();
+  const [transferResponse, setTransferResponse] = useState(null);
+  const [orderResponse, setOrderResponse] = useState(null);
+  const [error, setError] = useState(null);
+  const [activeSection, setActiveSection] = useState(null);
+  const { transferTokens, orderHistory } = useOkto();
+  const [transferData, setTransferData] = useState({
+    network_name: "",
+    token_address: "",
+    quantity: "",
+    recipient_address: "",
+  });
+  const [orderData, setOrderData] = useState({
+    order_id: "",
+  });
 
-import React, {
-  useMemo,
-  useCallback,
-  useState,
-  useEffect,
-  useContext,
-} from "react";
-import "tailwindcss/tailwind.css";
-
-import "@solana/wallet-adapter-react-ui/styles.css";
-import { AuthContext } from "../context/auth";
-import axios from "axios";
-
-let thelamports = 0;
-let theWallet = "9m5kFDqgpf7Ckzbox91RYcADqcmvxW4MmuNvroD5H2r9";
-
-const Transactions = ({ closeModal }) => {
-  return (
-    <Context>
-      <Content closeModal={closeModal} />
-    </Context>
-  );
-};
-
-export default Transactions;
-
-const Context = ({ children }) => {
-  const network = WalletAdapterNetwork.Testnet;
-  const endpoint = useMemo(() => clusterApiUrl(network), [network]);
-
-  const wallets = useMemo(
-    () => [
-      new LedgerWalletAdapter(),
-      new PhantomWalletAdapter(),
-
-      new SolflareWalletAdapter({ network }),
-      new TorusWalletAdapter(),
-    ],
-    [network]
-  );
-
-  return (
-    <ConnectionProvider endpoint={endpoint}>
-      <WalletProvider wallets={wallets} autoConnect>
-        <WalletModalProvider>{children}</WalletModalProvider>
-      </WalletProvider>
-    </ConnectionProvider>
-  );
-};
-
-const Content = ({ closeModal }) => {
-  const { auth } = useContext(AuthContext);
-  const [lamports, setLamports] = useState(null);
-  const [walletAddress, setWalletAddress] = useState("");
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await axios.post(
-          "https://x-ploit-backend-4.onrender.com/api/get-profile",
-          { profileId: auth?.user?._id }
-        );
-        const userData = response.data;
-        console.log("fetched wallet and user profile", userData);
-        setUserProfile(userData);
-        if (userData.wallet) {
-          setWalletAddress(userData.wallet);
-        }
-      } catch (error) {
-        console.error("Failed to fetch user data:", error);
-      }
-    };
-
-    if (auth?.user?._id) {
-      fetchUserData();
+  const handleTransferTokens = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await transferTokens(transferData);
+      setTransferResponse(response);
+      setActiveSection("transferResponse");
+    } catch (error) {
+      setError(`Failed to transfer tokens: ${error.message}`);
     }
-  }, [auth]);
+  };
 
-  const [wallet, setWallet] = useState(walletAddress);
+  const handleInputChange = (e) => {
+    setTransferData({ ...transferData, [e.target.name]: e.target.value });
+  };
 
-  const connection = new Connection(clusterApiUrl("testnet"));
-  const { publicKey, sendTransaction } = useWallet();
+  const handleOrderCheck = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await orderHistory(orderData);
+      setOrderResponse(response);
+      setActiveSection("orderResponse");
+    } catch (error) {
+      setError(`Failed to fetch order status: ${error.message}`);
+    }
+  };
 
-  const onClick = useCallback(async () => {
-    if (!publicKey) throw new WalletNotConnectedError();
+  const handleInputChangeOrders = (e) => {
+    setOrderData({ ...orderData, [e.target.name]: e.target.value });
+  };
 
-    connection.getBalance(publicKey).then((bal) => {
-      console.log(bal / LAMPORTS_PER_SOL);
-    });
+  const containerStyle = {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    padding: "20px",
+    maxWidth: "800px",
+    margin: "0 auto",
+  };
+  const buttonStyle = {
+    margin: "5px",
+    padding: "10px 20px",
+    fontSize: "16px",
+    cursor: "pointer",
+  };
+  const formStyle = {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    width: "100%",
+    maxWidth: "400px",
+  };
+  const inputStyle = {
+    margin: "5px",
+    padding: "10px",
+    width: "100%",
+    fontSize: "16px",
+  };
 
-    let lamportsI = LAMPORTS_PER_SOL * lamports;
-    console.log(publicKey.toBase58());
-    console.log("lamports sending: {}", thelamports);
-    const transaction = new Transaction().add(
-      SystemProgram.transfer({
-        fromPubkey: publicKey,
-        toPubkey: new PublicKey(theWallet),
-        lamports: lamportsI,
-      })
-    );
+  const navRawTxn = async () => {
+    try {
+      console.log("going to rax txn page");
+      navigate("/raw");
+    } catch (error) {
+      setError(`Failed to navigate: ${error.message}`);
+    }
+  };
 
-    const signature = await sendTransaction(transaction, connection);
-    await connection.confirmTransaction(signature, "processed");
-  }, [publicKey, sendTransaction, connection, lamports]);
-
-  function setTheLamports(e) {
-    console.log(Number(e.target.value));
-    setLamports(Number(e.target.value));
-    thelamports = Number(e.target.value);
-  }
-
-  function setTheWallet(e) {
-    setWallet(e.target.value);
-    theWallet = e.target.value;
-  }
+  const navWidget = async () => {
+    try {
+      console.log("going to widget page");
+      navigate("/widget");
+    } catch (error) {
+      setError(`Failed to navigate: ${error.message}`);
+    }
+  };
 
   return (
-    <div className="App">
-      <ul className="flex space-x-4">
-        <li>
-          <WalletMultiButton />
-        </li>
-      </ul>
+    <div style={containerStyle}>
+      <h1>Home Page</h1>
+      {/* Rendering ReadData component and passing handleLogout */}
+      <ReadData handleLogout={handleLogout} authToken={authToken} />
 
-      <div className="flex flex-col  mt-10 items-start justify-start">
-        <p className="text-black">Receiver :</p>
+      <h2>Transfer Tokens</h2>
+      <form style={formStyle} onSubmit={handleTransferTokens}>
         <input
-          value={wallet}
+          style={inputStyle}
           type="text"
-          onChange={setTheWallet}
-          className="mb-4 p-2 border border-gray-300 rounded text-black"
+          name="network_name"
+          placeholder="Network Name"
+          value={transferData.network_name}
+          onChange={handleInputChange}
+          required
         />
-        <p className="text-black">Amount :</p>
         <input
-          value={lamports}
-          type="number"
-          onChange={setTheLamports}
-          className="mb-4 p-2 border border-gray-300 rounded text-black"
+          style={inputStyle}
+          type="text"
+          name="token_address"
+          placeholder="Token Address"
+          value={transferData.token_address}
+          onChange={handleInputChange}
+          required
         />
-
-        <div className="flex space-x-4">
-          <button
-            className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded mt-4 "
-            onClick={onClick}
-          >
-            Send Sol
-          </button>
-          <button
-            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4"
-            onClick={closeModal}
-          >
-            Close
-          </button>
+        <input
+          style={inputStyle}
+          type="text"
+          name="quantity"
+          placeholder="Quantity"
+          value={transferData.quantity}
+          onChange={handleInputChange}
+          required
+        />
+        <input
+          style={inputStyle}
+          type="text"
+          name="recipient_address"
+          placeholder="Recipient Address"
+          value={transferData.recipient_address}
+          onChange={handleInputChange}
+          required
+        />
+        <button style={buttonStyle} type="submit">
+          Transfer Tokens
+        </button>
+      </form>
+      {activeSection === "transferResponse" && transferResponse && (
+        <div>
+          <h2>Transfer Response:</h2>
+          <pre>{JSON.stringify(transferResponse, null, 2)}</pre>
         </div>
+      )}
+      <h2>Check Order</h2>
+      <form style={formStyle} onSubmit={handleOrderCheck}>
+        <input
+          style={inputStyle}
+          type="text"
+          name="order_id"
+          placeholder="Order Id"
+          value={orderData.order_id}
+          onChange={handleInputChangeOrders}
+          required
+        />
+        <button style={buttonStyle} type="submit">
+          Check Status
+        </button>
+      </form>
+      {activeSection === "orderResponse" && orderResponse && (
+        <div>
+          <h2>Order Status:</h2>
+          <pre>{JSON.stringify(orderResponse, null, 2)}</pre>
+        </div>
+      )}
+      {error && (
+        <div style={{ color: "red" }}>
+          <h2>Error:</h2>
+          <p>{error}</p>
+        </div>
+      )}
+      <div>
+        <br />
+        <br />
+        <button style={buttonStyle} onClick={navRawTxn}>
+          Try Raw Txn
+        </button>
+        <button style={buttonStyle} onClick={navWidget}>
+          Try widgets
+        </button>
       </div>
     </div>
   );
 };
+
+export default Transactions;
