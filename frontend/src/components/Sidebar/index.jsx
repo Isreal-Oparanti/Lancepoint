@@ -19,7 +19,7 @@ const SideNav = () => {
   };
 
   return (
-    <div className="flex-1 bg-primary-dark h-screen p-8 fixed top-0 left-0 overflow-y-auto">
+    <div className="flex-1 bg-primary-dark h-screen p-4 fixed top-0 left-0 overflow-y-auto">
       <div className="text-white mt-10">
         <div className="font-bold capitalize">
           {auth.user.firstname + " " + auth.user.lastname}

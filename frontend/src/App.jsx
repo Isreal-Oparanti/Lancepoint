@@ -1,4 +1,3 @@
-// App.js
 import React, { useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
@@ -39,19 +38,17 @@ function App() {
   }, []);
 
   const isLandingPage = location.pathname === "/";
-  const isS = location.pathname === "/signup";
-  const isL = location.pathname === "/login";
+  const isSignupPage = location.pathname === "/signup";
+  const isLoginPage = location.pathname === "/login";
 
   return (
     <div className="App">
       <OktoProvider apiKey={OKTO_CLIENT_API_KEY} buildType={BuildType.SANDBOX}>
         <div className="flex">
-          {/* Show SideNav on larger screens and not on landing page */}
-          {!isMobile && !isLandingPage && !isS && !isL && <SideNav />}
+          {/* Show SideNav on larger screens and not on landing, signup, or login pages */}
+          {!isMobile && !isLandingPage && !isSignupPage && !isLoginPage && <SideNav />}
           {/* Main content area */}
-          <div
-            className={`flex-1 ${isMobile || isLandingPage ? "ml-0" : "ml-0"}`}
-          >
+          <div className={`flex-1 ${isMobile ? "ml-0" : "ml-0"}`}>
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
@@ -65,8 +62,8 @@ function App() {
             </Routes>
           </div>
         </div>
-        {/* Show BottomNav on smaller screens and not on landing page */}
-        {isMobile && !isLandingPage && <BottomNav />}
+        {/* Show BottomNav on smaller screens and not on landing, signup, or login pages */}
+        {isMobile && !isLandingPage && !isSignupPage && !isLoginPage && <BottomNav />}
       </OktoProvider>
       <ToastContainer
         position="top-right"
