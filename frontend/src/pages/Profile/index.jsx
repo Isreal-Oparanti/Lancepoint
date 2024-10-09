@@ -139,7 +139,7 @@ const Profile = () => {
               </h2>
               <p>
                 <span className="font-semibold">Email: </span>
-                <span className="text-gray-200">{userProfile.email}</span>
+                <span className="text-gray-200 text-sm break-words">{userProfile.email}</span>
               </p>
               <p>
                 <span className="font-semibold">Wallet Address:</span>{" "}
