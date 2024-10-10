@@ -16,6 +16,7 @@ const ReadData = ({ authToken, handleLogout }) => {
   const fetchUserDetails = async () => {
     try {
       const details = await getUserDetails();
+      console.log(details, "details");
       setUserDetails(details);
       setActiveSection("userDetails");
     } catch (error) {
@@ -60,28 +61,30 @@ const ReadData = ({ authToken, handleLogout }) => {
     margin: "0 auto",
   };
   const buttonStyle = {
-    margin: "5px",
+    margin: "15px",
     padding: "10px 20px",
     fontSize: "16px",
     cursor: "pointer",
+    color: "red",
   };
-  // const formStyle = {
-  //   display: 'flex',
-  //   flexDirection: 'column',
-  //   alignItems: 'center',
-  //   width: '100%',
-  //   maxWidth: '400px',
-  // };
-  // const inputStyle = {
-  //   margin: '5px',
-  //   padding: '10px',
-  //   width: '100%',
-  //   fontSize: '16px',
-  // };
+  const formStyle = {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    width: "100%",
+    maxWidth: "400px",
+  };
+  const inputStyle = {
+    margin: "5px",
+    padding: "10px",
+    width: "100%",
+    fontSize: "16px",
+  };
 
   return (
     <div style={containerStyle}>
       <div>
+        test
         <button style={buttonStyle} onClick={fetchUserDetails}>
           View User Details
         </button>

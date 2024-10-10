@@ -21,7 +21,8 @@ import {
 
 import Transactions from "../../components/transaction";
 
-const YourGigsPage = () => {
+const YourGigsPage = ({ authToken, handleLogout }) => {
+   
   const { auth } = useContext(AuthContext);
   const [userJobs, setUserJobs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -266,11 +267,36 @@ const YourGigsPage = () => {
                             className="flex justify-between items-center bg-gray-700 p-3 rounded-lg "
                           >
                             <div>
+                              {/* {console.log(} */}
                               {/* {pending &&  } */}
                               {applicant.orders[0] &&
                               applicant.orders[0].completedStatus ? (
                                 <div className="flex flex-col mb-3 ">
-                                  {/* View Job Button */}
+                                  {applicant.orders[0].completedStatus ? (
+                                    <span className="text-green-500 mb-4">
+                                      Job Completed
+                                    </span>
+                                  ) : (
+                                    <button
+                                      onClick={() =>
+                                        toggleApplication(
+                                          applicant._id,
+                                          job._id,
+                                          applicant.accepted
+                                        )
+                                      }
+                                      className={`px-3 mb-5 py-1 rounded text-white ${
+                                        applicant.accepted
+                                          ? "bg-red-500 hover:bg-red-600"
+                                          : "bg-green-500 hover:bg-green-600"
+                                      }`}
+                                    >
+                                      {applicant.accepted
+                                        ? "Cancel Order"
+                                        : "Start Order"}
+                                    </button>
+                                  )}
+
                                   <div className="flex">
                                     <button className="bg-purple-600 p-1 mr-4  px-3  rounded-full text-white">
                                       <a
@@ -301,7 +327,7 @@ const YourGigsPage = () => {
                                       onClick={() =>
                                         setShowWormhole((prev) => !prev)
                                       }
-                                      className="px-4 py-2 rounded bg-purple-600 hover:bg-purple-700 text-white"
+                                      className="px-4 py-2 rounded text-sm bg-purple-600 hover:bg-purple-700 text-white"
                                     >
                                       Convert Asset With Wormhole
                                     </button>
@@ -395,24 +421,6 @@ const YourGigsPage = () => {
                                 View Profile
                               </a>
                             </div>
-                            <button
-                              onClick={() =>
-                                toggleApplication(
-                                  applicant._id,
-                                  job._id,
-                                  applicant.accepted
-                                )
-                              }
-                              className={`px-3 mt-16 py-1 rounded text-white ${
-                                applicant.accepted
-                                  ? "bg-red-500 hover:bg-red-600"
-                                  : "bg-green-500 hover:bg-green-600"
-                              }`}
-                            >
-                              {applicant.accepted
-                                ? "Cancel Order"
-                                : "Start Order"}
-                            </button>
                           </div>
                         ))
                       ) : (

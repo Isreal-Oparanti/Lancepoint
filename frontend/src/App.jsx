@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+ 
 import {
   BrowserRouter as Router,
   Route,
+  Navigate,
   Routes,
   useLocation,
 } from "react-router-dom";
@@ -41,8 +43,17 @@ function App() {
   const isSignupPage = location.pathname === "/signup";
   const isLoginPage = location.pathname === "/login";
 
+
+  console.log('App component rendered');
+  const [authToken, setAuthToken] = useState(null);
+  const handleLogout = () => {
+     console.log("setting auth token to null")
+     setAuthToken(null); // Clear the authToken
+   };
+
   return (
     <div className="App">
+        {/* <Route path="/login" element={<Login />} /> */}
       <OktoProvider apiKey={OKTO_CLIENT_API_KEY} buildType={BuildType.SANDBOX}>
         <div className="flex">
           {/* Show SideNav on larger screens and not on landing, signup, or login pages */}
@@ -51,14 +62,16 @@ function App() {
           <div className={`flex-1 ${isMobile ? "ml-0" : "ml-0"}`}>
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
+            
+              <Route path="/login" element={<Login setAuthToken={setAuthToken} authToken={authToken} handleLogout={handleLogout}/>} />
               <Route path="/signup" element={<SignUp />} />
               <Route path="/createjobs" element={<CreateGig />} />
               <Route path="/jobs" element={<Jobs />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/profile/:id" element={<Profile />} />
-              <Route path="/yourjob" element={<YourGigsPage />} />
+              <Route path="/yourjob" element={authToken ? <YourGigsPage authToken={authToken} handleLogout={handleLogout}/> : <Navigate to="/"/>}/>
               <Route path="/application" element={<Application />} />
+
             </Routes>
           </div>
         </div>
