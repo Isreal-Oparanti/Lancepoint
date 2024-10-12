@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
- 
+
 import {
   BrowserRouter as Router,
   Route,
@@ -22,7 +22,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function App() {
-  const OKTO_CLIENT_API_KEY = "b9b928ee-9b60-4e34-bb2d-4398dfcb012c";
+  const OKTO_CLIENT_API_KEY = "870a3df1-2aa7-4cd0-b403-8b4f09aea96e";
 
   const [isMobile, setIsMobile] = useState(false);
   const location = useLocation(); // Get the current location
@@ -43,52 +43,54 @@ function App() {
   const isSignupPage = location.pathname === "/signup";
   const isLoginPage = location.pathname === "/login";
 
-
-  console.log('App component rendered');
+  console.log("App component rendered");
   const [authToken, setAuthToken] = useState(null);
   const handleLogout = () => {
-     console.log("setting auth token to null")
-     setAuthToken(null); // Clear the authToken
-   };
+    console.log("setting auth token to null");
+    setAuthToken(null); // Clear the authToken
+  };
 
   return (
-    <div className="App">
+    <OktoProvider apiKey={OKTO_CLIENT_API_KEY} buildType={BuildType.SANDBOX}>
+      <div className="App">
         {/* <Route path="/login" element={<Login />} /> */}
-      <OktoProvider apiKey={OKTO_CLIENT_API_KEY} buildType={BuildType.SANDBOX}>
         <div className="flex">
           {/* Show SideNav on larger screens and not on landing, signup, or login pages */}
-          {!isMobile && !isLandingPage && !isSignupPage && !isLoginPage && <SideNav />}
+          {!isMobile && !isLandingPage && !isSignupPage && !isLoginPage && (
+            <SideNav />
+          )}
           {/* Main content area */}
           <div className={`flex-1 ${isMobile ? "ml-0" : "ml-0"}`}>
             <Routes>
               <Route path="/" element={<Home />} />
-            
-              <Route path="/login" element={<Login setAuthToken={setAuthToken} authToken={authToken} handleLogout={handleLogout}/>} />
+
+              <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<SignUp />} />
               <Route path="/createjobs" element={<CreateGig />} />
               <Route path="/jobs" element={<Jobs />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/profile/:id" element={<Profile />} />
-              <Route path="/yourjob" element={authToken ? <YourGigsPage authToken={authToken} handleLogout={handleLogout}/> : <Navigate to="/"/>}/>
+              <Route path="/yourjob" element={<YourGigsPage />} />
               <Route path="/application" element={<Application />} />
-
             </Routes>
           </div>
         </div>
         {/* Show BottomNav on smaller screens and not on landing, signup, or login pages */}
-        {isMobile && !isLandingPage && !isSignupPage && !isLoginPage && <BottomNav />}
-      </OktoProvider>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
-    </div>
+        {isMobile && !isLandingPage && !isSignupPage && !isLoginPage && (
+          <BottomNav />
+        )}
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
+      </div>
+    </OktoProvider>
   );
 }
 

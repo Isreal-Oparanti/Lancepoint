@@ -23,6 +23,7 @@ const ReadData = ({ authToken, handleLogout }) => {
       setError(`Failed to fetch user details: ${error.message}`);
     }
   };
+
   const fetchPortfolio = async () => {
     try {
       const portfolio = await getPortfolio();
@@ -32,6 +33,7 @@ const ReadData = ({ authToken, handleLogout }) => {
       setError(`Failed to fetch portfolio: ${error.message}`);
     }
   };
+
   const fetchWallets = async () => {
     try {
       const walletsData = await createWallet();

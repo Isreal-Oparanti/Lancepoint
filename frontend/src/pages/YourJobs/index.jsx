@@ -5,7 +5,6 @@ import Sidebar from "../../components/Sidebar";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import WormholeConnect from "@wormhole-foundation/wormhole-connect";
 import { ConnectEmbed } from "thirdweb/react";
 import { client } from "../../client";
 import { createWallet } from "thirdweb/wallets";
@@ -18,11 +17,10 @@ import {
   LAMPORTS_PER_SOL,
   Transaction,
 } from "@solana/web3.js";
-
+import { useOkto } from "okto-sdk-react";
 import Transactions from "../../components/transaction";
 
 const YourGigsPage = ({ authToken, handleLogout }) => {
-   
   const { auth } = useContext(AuthContext);
   const [userJobs, setUserJobs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -31,11 +29,97 @@ const YourGigsPage = ({ authToken, handleLogout }) => {
   const [userOrders, setUserOrders] = useState([]);
   const [a, setA] = useState(true);
   const [pending, setPending] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const [reviews, setReviews] = useState({});
 
-  const [showWormhole, setShowWormhole] = useState(false);
-  const [showConnectEmbed, setShowConnectEmbed] = useState(false);
+  const [userDetails, setUserDetails] = useState(null);
+  const [portfolioData, setPortfolioData] = useState(null);
+  const [wallets, setWallets] = useState(null);
+  const [transferResponse, setTransferResponse] = useState(null);
+  const [orderResponse, setOrderResponse] = useState(null);
+  const [error, setError] = useState(null);
+  const [activeSection, setActiveSection] = useState(null);
+
+  const {
+    getUserDetails,
+    getPortfolio,
+    createWallet,
+    transferTokens,
+    orderHistory,
+  } = useOkto();
+
+  const [transferData, setTransferData] = useState({
+    network_name: "",
+    token_address: "",
+    quantity: "",
+    recipient_address: "",
+  });
+
+  const [orderData, setOrderData] = useState({
+    order_id: "",
+  });
+
+  const fetchUserDetails = async () => {
+    try {
+      const details = await getUserDetails();
+      setUserDetails(details);
+      setActiveSection("userDetails");
+    } catch (error) {
+      setError(`Failed to fetch user details: ${error.message}`);
+    }
+  };
+
+  const fetchPortfolio = async () => {
+    try {
+      const portfolio = await getPortfolio();
+      setPortfolioData(portfolio);
+      setActiveSection("portfolio");
+    } catch (error) {
+      setError(`Failed to fetch portfolio: ${error.message}`);
+    }
+  };
+
+  const fetchWallets = async () => {
+    try {
+      const walletsData = await createWallet();
+      console.log(walletsData);
+      setWallets(walletsData);
+      setActiveSection("wallets");
+    } catch (error) {
+      setError(`Failed to fetch wallets: ${error.message}`);
+    }
+  };
+
+  const handleTransferTokens = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await transferTokens(transferData);
+      setTransferResponse(response);
+      setActiveSection("transferResponse");
+    } catch (error) {
+      setError(`Failed to transfer tokens: ${error.message}`);
+    }
+  };
+
+  const handleOrderCheck = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await orderHistory(orderData);
+      setOrderResponse(response);
+      setActiveSection("orderResponse");
+    } catch (error) {
+      setError(`Failed to fetch order status: ${error.message}`);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    setTransferData({ ...transferData, [e.target.name]: e.target.value });
+  };
+
+  const handleInputChangeOrders = (e) => {
+    setOrderData({ ...orderData, [e.target.name]: e.target.value });
+  };
 
   const handleRatingChange = (rating, applicantId) => {
     setReviews((prev) => ({
@@ -217,7 +301,6 @@ const YourGigsPage = ({ authToken, handleLogout }) => {
                 <div
                   key={index}
                   className="bg-gray-800 rounded-lg p-4 shadow-md hover:shadow-xl transition-shadow duration-300"
-                  style={{ height: "auto !important" }}
                 >
                   <h2 className="text-xl font-semibold mb-2">{job.title}</h2>
                   <div className="flex items-center justify-between text-sm">
@@ -264,52 +347,27 @@ const YourGigsPage = ({ authToken, handleLogout }) => {
                         applicants[job._id].map((applicant) => (
                           <div
                             key={applicant._id}
-                            className="flex justify-between items-center bg-gray-700 p-3 rounded-lg "
+                            className="flex justify-between items-center bg-gray-700 p-3 rounded-lg"
                           >
                             <div>
-                              {/* {console.log(} */}
-                              {/* {pending &&  } */}
                               {applicant.orders[0] &&
                               applicant.orders[0].completedStatus ? (
-                                <div className="flex flex-col mb-3 ">
-                                  {applicant.orders[0].completedStatus ? (
-                                    <span className="text-green-500 mb-4">
-                                      Job Completed
-                                    </span>
-                                  ) : (
-                                    <button
-                                      onClick={() =>
-                                        toggleApplication(
-                                          applicant._id,
-                                          job._id,
-                                          applicant.accepted
-                                        )
-                                      }
-                                      className={`px-3 mb-5 py-1 rounded text-white ${
-                                        applicant.accepted
-                                          ? "bg-red-500 hover:bg-red-600"
-                                          : "bg-green-500 hover:bg-green-600"
-                                      }`}
-                                    >
-                                      {applicant.accepted
-                                        ? "Cancel Order"
-                                        : "Start Order"}
-                                    </button>
-                                  )}
-
+                                <div className="flex flex-col mb-3">
+                                  <span className="text-green-500 mb-4">
+                                    Job Completed
+                                  </span>
                                   <div className="flex">
-                                    <button className="bg-purple-600 p-1 mr-4  px-3  rounded-full text-white">
+                                    <button className="bg-purple-600 p-1 mr-4 px-3 rounded-full text-white">
                                       <a
                                         target="_blank"
+                                        rel="noopener noreferrer"
                                         href={applicant.orders[0].jobLink}
                                       >
                                         View Job
                                       </a>
                                     </button>
-
-                                    {/* Review Button */}
                                     <button
-                                      className="bg-purple-600    px-3  rounded-full text-white"
+                                      className="bg-purple-600 px-3 rounded-full text-white"
                                       onClick={() =>
                                         setAccordionOpen((prev) => ({
                                           ...prev,
@@ -321,87 +379,161 @@ const YourGigsPage = ({ authToken, handleLogout }) => {
                                         ? "Hide Review"
                                         : "Write Review"}
                                     </button>
-                                  </div>
-                                  <div className="flex justify-center mt-8">
                                     <button
-                                      onClick={() =>
-                                        setShowWormhole((prev) => !prev)
-                                      }
-                                      className="px-4 py-2 rounded text-sm bg-purple-600 hover:bg-purple-700 text-white"
-                                    >
-                                      Convert Asset With Wormhole
-                                    </button>
-                                    <button
-                                      onClick={() =>
-                                        setShowConnectEmbed((prev) => !prev)
-                                      }
                                       className="ml-4 px-4 py-2 rounded bg-purple-600 hover:bg-purple-700 text-white"
+                                      onClick={() => setShowModal(true)}
                                     >
                                       Initiate Transaction
                                     </button>
                                   </div>
-                                  {/* Review Form (Shown when expanded) */}
-                                  {accordionOpen[applicant._id] && (
-                                    <div className="bg-gray-700 p-4 rounded-lg">
-                                      <form
-                                        onSubmit={(e) =>
-                                          handleSubmitReview(e, applicant._id)
-                                        }
-                                      >
-                                        {/* Rating Section */}
-                                        <div className="mb-4">
-                                          <label className="block text-white mb-2">
-                                            Rating:
-                                          </label>
-                                          <div className="flex space-x-2">
-                                            {[1, 2, 3, 4, 5].map((rating) => (
-                                              <label
-                                                key={rating}
-                                                className="text-white"
-                                              >
-                                                <input
-                                                  type="radio"
-                                                  name={`rating-${applicant._id}`}
-                                                  value={rating}
-                                                  onChange={() =>
-                                                    handleRatingChange(
-                                                      rating,
-                                                      applicant._id
-                                                    )
-                                                  }
-                                                />
-                                                {rating} ⭐
-                                              </label>
-                                            ))}
-                                          </div>
+
+                                  {showModal && (
+                                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 overflow-auto">
+                                      <div className="bg-gray-800 rounded-lg p-6 shadow-lg w-full min-w-[700px]">
+                                        <h1 className="text-xl font-bold mb-4">
+                                          Initiate Transaction
+                                        </h1>
+
+                                        <div className="mb-4 gap-4 flex flex-wrap">
+                                          <button
+                                            className="bg-purple-600 hover:bg-purple-700 px-3 py-2 rounded text-white"
+                                            onClick={fetchUserDetails}
+                                          >
+                                            View User Details
+                                          </button>
+                                          <button
+                                            className="bg-purple-600 hover:bg-purple-700 px-3 py-2 rounded text-white"
+                                            onClick={fetchPortfolio}
+                                          >
+                                            View Portfolio
+                                          </button>
+                                          <button
+                                            className="bg-purple-600 hover:bg-purple-700 px-3 py-2 rounded text-white"
+                                            onClick={fetchWallets}
+                                          >
+                                            View Wallets
+                                          </button>
                                         </div>
 
-                                        {/* Performance Feedback */}
-                                        <div className="mb-4">
-                                          <label className="block text-white mb-2">
-                                            Freelancer Performance:
-                                          </label>
-                                          <textarea
-                                            className="w-full p-2 rounded bg-gray-600 text-white"
-                                            placeholder="Describe the freelancer's performance"
-                                            value={applicant.feedback}
-                                            onChange={(e) =>
-                                              handleFeedbackChange(
-                                                e.target.value,
-                                                applicant._id
-                                              )
-                                            }
-                                          />
-                                        </div>
+                                        {activeSection === "userDetails" &&
+                                          userDetails && (
+                                            <div>
+                                              <h2>User Details:</h2>
+                                              <pre>
+                                                {JSON.stringify(
+                                                  userDetails,
+                                                  null,
+                                                  2
+                                                )}
+                                              </pre>
+                                            </div>
+                                          )}
 
-                                        {/* Submit Button */}
-                                        <button
-                                          type="submit"
-                                          className="bg-green-500 hover:bg-green-600 px-4 py-2 rounded text-white"
+                                        {activeSection === "portfolio" &&
+                                          portfolioData && (
+                                            <div>
+                                              <h2>Portfolio Data:</h2>
+                                              <pre>
+                                                {JSON.stringify(
+                                                  portfolioData,
+                                                  null,
+                                                  2
+                                                )}
+                                              </pre>
+                                            </div>
+                                          )}
+
+                                        {activeSection === "wallets" &&
+                                          wallets && (
+                                            <div>
+                                              <h2>Wallets:</h2>
+                                              <pre>
+                                                {JSON.stringify(
+                                                  wallets,
+                                                  null,
+                                                  2
+                                                )}
+                                              </pre>
+                                            </div>
+                                          )}
+
+                                        {/* Transfer Tokens Form */}
+                                        <h2 className="mt-6 text-lg font-semibold">
+                                          Transfer Tokens
+                                        </h2>
+                                        <form
+                                          className="mt-2"
+                                          onSubmit={handleTransferTokens}
                                         >
-                                          Submit Review
-                                        </button>
-                                      </form>
+                                          <input
+                                            className="w-full p-2 mb-2 rounded bg-gray-600 text-white"
+                                            type="text"
+                                            name="network_name"
+                                            placeholder="Network Name"
+                                            value={transferData.network_name}
+                                            onChange={handleInputChange}
+                                            required
+                                          />
+                                          <input
+                                            className="w-full p-2 mb-2 rounded bg-gray-600 text-white"
+                                            type="text"
+                                            name="token_address"
+                                            placeholder="Token Address"
+                                            value={transferData.token_address}
+                                            onChange={handleInputChange}
+                                            required
+                                          />
+                                          <input
+                                            className="w-full p-2 mb-2 rounded bg-gray-600 text-white"
+                                            type="text"
+                                            name="quantity"
+                                            placeholder="Quantity"
+                                            value={transferData.quantity}
+                                            onChange={handleInputChange}
+                                            required
+                                          />
+                                          <input
+                                            className="w-full p-2 mb-2 rounded bg-gray-600 text-white"
+                                            type="text"
+                                            name="recipient_address"
+                                            placeholder="Recipient Address"
+                                            value={
+                                              transferData.recipient_address
+                                            }
+                                            onChange={handleInputChange}
+                                            required
+                                          />
+                                          <button
+                                            className="mr-4 bg-green-500 hover:bg-green-600 px-4 py-2 rounded text-white"
+                                            type="submit"
+                                          >
+                                            Transfer Tokens
+                                          </button>
+
+                                          <button
+                                            className="mt-4 bg-red-500 hover:bg-red-600 px-4 py-2 rounded text-white"
+                                            onClick={() => setShowModal(false)}
+                                          >
+                                            Close
+                                          </button>
+                                        </form>
+
+                                        {activeSection === "transferResponse" &&
+                                          transferResponse && (
+                                            <div>
+                                              <h2 className="mt-4">
+                                                Transfer Response:
+                                              </h2>
+                                              <pre>
+                                                {JSON.stringify(
+                                                  transferResponse,
+                                                  null,
+                                                  2
+                                                )}
+                                              </pre>
+                                            </div>
+                                          )}
+                                      </div>
                                     </div>
                                   )}
                                 </div>
@@ -430,28 +562,6 @@ const YourGigsPage = ({ authToken, handleLogout }) => {
                   )}
                 </div>
               ))}
-            </div>
-          )}
-          {showWormhole && (
-            <div className="bg-gray-800 rounded-lg p-6 shadow-lg mt-6">
-              <h2 className="text-xl font-bold mb-4"> Connect with Wormhole</h2>
-              <WormholeConnect />
-
-              <Toaster />
-            </div>
-          )}
-          {/* Connect Embed Display */}
-          {showConnectEmbed && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-              <div className="rounded-lg p-6 shadow-lg bg-white mt-6 flex justify-center items-center flex-col w-full max-w-[400px] ">
-                <button
-                  className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
-                  onClick={() => setShowConnectEmbed(false)}
-                >
-                  &times;
-                </button>
-                <Transactions closeModal={() => setShowConnectEmbed(false)} />
-              </div>
             </div>
           )}
         </div>

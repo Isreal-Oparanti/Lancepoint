@@ -139,9 +139,11 @@ const Profile = () => {
               </h2>
               <p>
                 <span className="font-semibold">Email: </span>
-                <span className="text-gray-200 text-sm break-words">{userProfile.email}</span>
+                <span className="text-gray-200 text-sm break-words">
+                  {userProfile.email}
+                </span>
               </p>
-              <p>
+              {/* <p>
                 <span className="font-semibold">Wallet Address:</span>{" "}
                 <span className="text-green-500 break-words font-[monospace] text-sm">
                   {userProfile.wallet}
@@ -152,7 +154,7 @@ const Profile = () => {
                 >
                   {copyButtonText}
                 </button>
-              </p>
+              </p> */}
 
               {/* {oktoUserDetails && (
                 <div>
