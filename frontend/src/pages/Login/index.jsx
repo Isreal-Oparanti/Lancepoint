@@ -22,29 +22,52 @@ const Login = () => {
   const OKTO_CLIENT_API = "b9b928ee-9b60-4e34-bb2d-4398dfcb012c"; // Ensure this API key is correct
   const { authenticate } = useOkto();
 
-  const handleGoogleLogin = async (credentialResponse) => {
-    const idToken = credentialResponse.credential;
-    console.log("Google idToken:", idToken);
 
-    try {
-      // Send idToken to your backend for verification and authentication
-      const response = await axios.post(
-        "https://x-ploit-backend-4.onrender.com/api/google-login",
-        {
-          idToken,
-        }
-      );
+  const apiService = axios.create({
+    baseURL: BASE_URL,
+    headers: {
+      "x-api-key": OKTO_CLIENT_API,
+      "Content-Type": "application/json",
+    },
+  });
 
-      const { user } = response.data;
-      localStorage.setItem("user", JSON.stringify(user));
-      setAuth({ user });
-      toast.success("Login Successful!");
-      navigate("/profile");
-    } catch (error) {
-      console.error("Login error:", error);
-      toast.error("Google login failed. Please try again.");
-    }
+  const setPin = (idToken, token, reloginPin) => {
+    return apiService.post("/api/v1/set_pin", {
+      id_token: idToken,
+      token: token,
+      relogin_pin: reloginPin,
+      purpose: "set_pin",
+    });
   };
+
+
+  const handleGoogleLogin = async (credentialResponse) => {
+    console.log("Google login response:", credentialResponse);
+    const idToken = credentialResponse.credential;
+    console.log("google idtoken: ", idToken);
+    authenticate(idToken, async (authResponse, error) => {
+      if (authResponse) {
+        console.log("Authentication check: ", authResponse);
+        setAuthToken(authResponse.auth_token);
+        if (!authToken && authResponse.action === "signup") {
+          console.log("User Signup");
+          const pinToken = authResponse.token;
+          await setPin(idToken, pinToken, "0000");
+          await authenticate(idToken, async (res, err) => {
+            if (res) {
+              setAuthToken(res.auth_token);
+            }
+          });
+        }
+        console.log("auth token received", authToken);
+        navigate("/profile");
+      }
+      if (error) {
+        console.error("Authentication error:", error);
+      }
+    });
+  };
+
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
@@ -131,12 +154,21 @@ const Login = () => {
             <div className="text-white mt-4 mx-auto text-center">OR</div>
 
             <div className="flex justify-center w-full mt-4">
-              <GoogleLogin
-                onSuccess={handleGoogleLogin}
-                onError={(error) => {
-                  console.log("Login Failed", error);
-                }}
-              />
+            {!authToken ? (
+        <GoogleLogin
+          onSuccess={handleGoogleLogin}
+          onError={(error) => {
+            console.log("Login Failed", error);
+          }}
+          useOneTap
+          promptMomentNotification={(notification) =>
+            console.log("Prompt moment notification:", notification)
+          }
+        />
+      ) : (
+        <> Authenticated </>
+      )}
+
             </div>
           </div>
 

@@ -291,6 +291,12 @@ const YourGigsPage = ({ authToken, handleLogout }) => {
         <div className="p-6">
           <h1 className="text-3xl font-semibold mb-6">Your Gigs</h1>
 
+
+
+
+                            
+
+
           {loading ? (
             <p className="text-gray-400">Loading your gigs...</p>
           ) : userJobs.length === 0 ? (
