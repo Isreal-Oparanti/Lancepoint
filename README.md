@@ -1,5 +1,3 @@
-# Team-Xploit
-
 
 ### Overview
 
@@ -9,17 +7,12 @@ LancePoint is a revolutionary platform designed to streamline on-chain payments 
 
 - **On-chain Payments**: Utilize smart contracts to facilitate secure and transparent transactions between clients and workers, eliminating the need for intermediaries and reducing the risk of fraud.
 
-- **Anonymity and Privacy**: Protect user privacy by enabling anonymous interactions between clients and workers while still ensuring transparency and accountability through on-chain ratings and reputation management.
-
 - **Worker Reputation Control**: Empower workers to take control of their reputation by providing them with the ability to build and maintain their on-chain reputation, which can be accessed and verified by potential clients.
 
-- **Deposit and Withdrawal Functionality**: Enable users to deposit funds into the platform using supported cryptocurrencies and withdraw funds securely through smart contracts.
-
-- **Job Posting and Selection**: Allow clients to post job openings on the platform and review CVs submitted by interested workers. Clients can then select the most suitable worker for the job based on their qualifications and experience.
+- **Job Posting and Selection**: Allow clients to post job openings on the platform and and review the POW (Proof of Work) of interested workers. Clients can then select the most suitable worker for the job based on their  experience.
 
 - **Agreement and Assignment**: Facilitate agreement between clients and workers on job terms through cryptographic signatures, and automate the assignment of jobs to selected workers through smart contracts.
 
-- **Dispute Resolution**: Implement a fair and transparent dispute resolution mechanism that enables the platform to intervene and resolve disputes between clients and workers in cases of dishonest behavior or breach of contract.
 
 #### Mission Statement
 
@@ -31,85 +24,125 @@ We envision a future where freelancers have full control over their reputation a
 
 #### Target Audience
 
-Our platform is designed for freelancers and clients across various industries who are seeking a secure, transparent, and efficient way to engage in business transactions. Whether you're a freelance developer, designer, writer, or consultant, or a client in need of professional services, [Your Application Name] provides the tools and infrastructure you need to succeed in the digital marketplace.
+Our platform is designed for freelancers and clients across various industries who are seeking a secure, transparent, and efficient way to engage in business transactions. Whether you're a freelance developer, designer, writer, or consultant, or a client in need of professional services, Lancepoint provides the tools and infrastructure you need to succeed in the digital marketplace.
 
 
 Certainly! Here's a suggested control flow for your application, broken down into steps:
 
 ### Control Flow
 
-#### 1. Account Creation and Fund Deposit
+#### 1. Account Creation 
 
 1. **User Registration**: 
     - Users create an account on the platform by providing necessary information such as username, and password.
     - Users will also connect their wallet, in order to maintain consistency on chain the application will function on an account to wallet basis ie one address to an account 
     - data containing the users personal information eg (bvn, bank details) is not required 
 
-2. **Fund Deposit**:
-3.  - This is a feature meant for clients 
-    - Users deposit funds into their platform account by sending supported cryptocurrencies to their unique deposit address provided by the platform.
-    - Funds are securely stored in the platform's smart contract.
-    - Funds can be withdrawn at any time as long as they are not currently being assigned to a contract, this is done to ensure the client does not remove the funds meant to pay the workers mid work 
-    - Users who frequently request jobs can make large deposits at a time to reduce the gas cost, this funds can them be allocated to different jobs as long the funds can cover said jobs 
 
 #### 2. Job Posting and Worker Selection
 
-3. **Job Posting**:
+1. **Job Posting**:
     - Clients post job openings on the platform, specifying job details such as title, description, skills required, and budget.
 
-4. **Worker Application**:
+2. **Worker Application**:
     - Workers review available job openings and submit their CVs or proposals for consideration.
 
-5. **Worker Selection**:
-    - Clients review received applications and select the most suitable worker for the job based on qualifications, experience, and proposed terms.
-    - All communication between the client and the worker must be done  through the platform to ensure transparency especially in a case of dispute, information not on the platform might be hard to verify
-
+3. **Worker Selection**:
+    - Clients review received applications and select the most suitable worker for the job based on qualifications and experience.
+  
 #### 3. Agreement and Job Assignment
 
-6. **Terms Agreement**:
+1. **Terms Agreement**:
     - Both client and selected worker agree to the job terms by signing a message with their private keys, ensuring cryptographic integrity.
-    - said message will contain information such as duration , payment amount, client address , workers address, nance etc
+    - said message will contain information such as duration , payment amount,etc
 
-7. **Job Assignment**:
+2. **Job Assignment**:
     - The client initiates the assignment of the job to the selected worker by submitting the agreed-upon terms and signatures to the platform's smart contract.
 
 #### 4. Job Completion and Payment
 
-8. **Job Completion**:
+1. **Job Completion**:
     - Upon completion of the job, the worker notifies the client.
 
-9. **Client Review and Rating**:
+2. **Client Review and Rating**:
     - The client reviews the completed work and rates the worker based on their performance and satisfaction.
 
-10. **Worker Payment Authorization**:
+3. **Worker Payment Authorization**:
     - If satisfied, the client authorizes the payment to the worker by signing a message with their private key.
     - said message will contain data such as {rating, a review string, tip}
 
-11. **Payment Execution**:
+4. **Payment Execution**:
     - The client initiates the payment by submitting the payment authorization message to the platform's smart contract.
     - The smart contract verifies the authorization and releases the funds to the worker's account after taking out a small fee for the protocol.
 
-#### 5. Dispute Resolution
-
-12. **Dispute Initiation**:
-    - In case of disagreement or dispute between client and worker, either party can initiate a dispute resolution process.
-
-13. **Protocol Investigation**:
-    - The platform's protocol team investigates the dispute, gathering relevant evidence and information from both parties.
-
-14. **Resolution Decision**:
-    - Based on the investigation, the protocol team determines the resolution of the dispute and issues appropriate instructions to the smart contract for fund allocation.
-
-#### 6. Off-Platform Transactions (Optional)
-
-15. **Off-Platform Interaction**:
-    - If client and worker interact outside the platform for a job, similar steps of agreement, completion, and payment can be followed.
-
-16. **Dispute Handling (Off-Platform)**:
-    - In case of disputes arising from off-platform transactions, the protocol team may provide guidance or mediation but may face limitations in intervention.
-
-This control flow provides a structured sequence of actions for users to follow when using your platform, ensuring clarity and consistency in the process.
 
 
+
+<!-- Getting Started -->
+## :toolbox: Getting Started
+
+<!-- Installation -->
+### :gear: Installation
+
+#### Step 1:
+Download or clone this repo by using the link below:
+
+```bash
+ https://github.com/Isreal-Oparanti/Lancepoint.git
+```
+
+#### Step 2:
+
+
+```bash
+  cd frontend and backend
+```
+
+#### Step 3:
+
+
+```bash
+  npm install
+```
+
+#### Step 4:
+
+At the main folder execute the following command in console to creates a build directory with a production build of 3d portfolio:
+
+```bash
+  npm start
+```
+
+
+
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- Contributing -->
+## :wave: Contributing
+
+
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
+Don't forget to give the project a star! Thanks again!
+
+
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+<!-- Contact -->
+## :handshake: Contact
+
+Ayoola - [nifemiayoola@gmail.com]
+
+or
+
+[Isreal](https://isreal-oparanti.vercel.app) - [isrealopa@gmail.com]
+
+## Project Demo Link: [Lancepoint](https://lancepoint.vercel.app)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
