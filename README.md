@@ -135,7 +135,8 @@ Don't forget to give the project a star! Thanks again!
 <!-- Contact -->
 ## :handshake: Contact
 
-Liron Abutbul - [@lironabutbul6](https://twitter.com/lironabutbul6) - [@ladunjexa](https://t.me/ladunjexa)
+Ayoola - [nifemiayoola@gmail.com]
+[Isreal](https://isreal-oparanti.vercel.app) - [isrealopa@gmail.com]
 
 Project Link: [https://github.com/ladunjexa/Threejs_3D_Portfolio](https://github.com/ladunjexa/Threejs_3D_Portfolio)
 
