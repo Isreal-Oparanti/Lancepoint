@@ -22,7 +22,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function App() {
-  const OKTO_CLIENT_API_KEY = "870a3df1-2aa7-4cd0-b403-8b4f09aea96e";
+  const OKTO_CLIENT_API_KEY = "75e21065-57c9-44a6-a7c0-797e80b43872";
 
   const [isMobile, setIsMobile] = useState(false);
   const location = useLocation(); // Get the current location

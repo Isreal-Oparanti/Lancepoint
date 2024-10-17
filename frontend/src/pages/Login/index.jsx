@@ -17,28 +17,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [authToken, setAuthToken] = useState();
-
-  const BASE_URL = "https://sandbox-api.okto.tech";
-  const OKTO_CLIENT_API = "b9b928ee-9b60-4e34-bb2d-4398dfcb012c"; // Ensure this API key is correct
   const { authenticate } = useOkto();
-
-
-  const apiService = axios.create({
-    baseURL: BASE_URL,
-    headers: {
-      "x-api-key": OKTO_CLIENT_API,
-      "Content-Type": "application/json",
-    },
-  });
-
-  const setPin = (idToken, token, reloginPin) => {
-    return apiService.post("/api/v1/set_pin", {
-      id_token: idToken,
-      token: token,
-      relogin_pin: reloginPin,
-      purpose: "set_pin",
-    });
-  };
 
 
   const handleGoogleLogin = async (credentialResponse) => {
@@ -49,16 +28,7 @@ const Login = () => {
       if (authResponse) {
         console.log("Authentication check: ", authResponse);
         setAuthToken(authResponse.auth_token);
-        if (!authToken && authResponse.action === "signup") {
-          console.log("User Signup");
-          const pinToken = authResponse.token;
-          await setPin(idToken, pinToken, "0000");
-          await authenticate(idToken, async (res, err) => {
-            if (res) {
-              setAuthToken(res.auth_token);
-            }
-          });
-        }
+    
         console.log("auth token received", authToken);
         navigate("/profile");
       }
