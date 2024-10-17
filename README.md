@@ -136,9 +136,12 @@ Don't forget to give the project a star! Thanks again!
 ## :handshake: Contact
 
 Ayoola - [nifemiayoola@gmail.com]
+
+or
+
 [Isreal](https://isreal-oparanti.vercel.app) - [isrealopa@gmail.com]
 
-Project Link: [https://github.com/ladunjexa/Threejs_3D_Portfolio](https://github.com/ladunjexa/Threejs_3D_Portfolio)
+## Project Demo Link: [Lancepoint](https://lancepoint.vercel.app)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
