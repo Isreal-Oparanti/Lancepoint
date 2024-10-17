@@ -110,35 +110,6 @@ Certainly! Here's a suggested control flow for your application, broken down int
 
 This control flow provides a structured sequence of actions for users to follow when using your platform, ensuring clarity and consistency in the process.
 
-**DEV**
-
-**Designer** The layout of the app is like that of a freelance platform  with a focus on designing web3 designs, another difference would be the design of a connect web3 option(there are several examples online)
-
-
-
-**WEB2 DEVELOPER**
-frontend 
-classic features of a freelance website 
-integrate web3 ie users should be able to connect their wallets to signup and sign messages 
-users should be able to communicate with each other in a secure way 
-users should be able to input job value on assignment and a message should be crafted which fits what is expected by the smart contract, said messsage will then be signed 
-recommendation : read on web3.js
-
-backend 
-store user data in secure database ie (username,password,wallet address and data related to the users public image eg their stack,exp and reviews for freelancers and total completed jobs for clients)
-cache of user data on login etc 
-
-**BLOCKCHAIN DEVELOPER**
-implementation of all smart contracts (for the purpose of the project, the smart contract language is solidity)
-notable features include 
-a deposit functionality : for clients to deposit 
-a withdraw functionality : for cliets to withdraw funds not allocated to any job
-a assign job functionality : for clients to assign a job to a freelancer 
-a finish job functionality : for freelancers to receive the reward for completing a job 
-
-INVARIANTS 
-clients must not be able to withdraw funds assigned to a job 
-workers must not be able to give themselves job which the client didnt sign 
 
 
 
