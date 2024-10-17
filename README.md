@@ -135,7 +135,7 @@ Don't forget to give the project a star! Thanks again!
 <!-- Contact -->
 ## :handshake: Contact
 
-Ayoola - [nifemiayoola@gmail.com]
+Ayooluwa - [nifemiayooluwa@gmail.com]
 
 or
 
