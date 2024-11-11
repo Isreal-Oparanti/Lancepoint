@@ -19,7 +19,6 @@ const Login = () => {
   const [authToken, setAuthToken] = useState();
   const { authenticate } = useOkto();
 
-
   const handleGoogleLogin = async (credentialResponse) => {
     console.log("Google login response:", credentialResponse);
     const idToken = credentialResponse.credential;
@@ -28,7 +27,7 @@ const Login = () => {
       if (authResponse) {
         console.log("Authentication check: ", authResponse);
         setAuthToken(authResponse.auth_token);
-    
+
         console.log("auth token received", authToken);
         navigate("/profile");
       }
@@ -37,7 +36,6 @@ const Login = () => {
       }
     });
   };
-
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
@@ -124,21 +122,20 @@ const Login = () => {
             <div className="text-white mt-4 mx-auto text-center">OR</div>
 
             <div className="flex justify-center w-full mt-4">
-            {!authToken ? (
-        <GoogleLogin
-          onSuccess={handleGoogleLogin}
-          onError={(error) => {
-            console.log("Login Failed", error);
-          }}
-          useOneTap
-          promptMomentNotification={(notification) =>
-            console.log("Prompt moment notification:", notification)
-          }
-        />
-      ) : (
-        <> Authenticated </>
-      )}
-
+              {!authToken ? (
+                <GoogleLogin
+                  onSuccess={handleGoogleLogin}
+                  onError={(error) => {
+                    console.log("Login Failed", error);
+                  }}
+                  useOneTap
+                  promptMomentNotification={(notification) =>
+                    console.log("Prompt moment notification:", notification)
+                  }
+                />
+              ) : (
+                <> Authenticated </>
+              )}
             </div>
           </div>
 

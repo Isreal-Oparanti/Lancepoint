@@ -19,7 +19,7 @@ import {
 } from "@solana/web3.js";
 import { useOkto } from "okto-sdk-react";
 import Transactions from "../../components/transaction";
-
+import WormholeConnect from "@wormhole-foundation/wormhole-connect";
 const YourGigsPage = ({ authToken, handleLogout }) => {
   const { auth } = useContext(AuthContext);
   const [userJobs, setUserJobs] = useState([]);
@@ -283,6 +283,20 @@ const YourGigsPage = ({ authToken, handleLogout }) => {
     };
   }, []);
 
+  const config = {
+    chains: ["Ethereum", "Solana"],
+    network: "Testnet",
+  };
+
+  const theme = {
+    background: {
+      default: "#4b0082", // Darker purple color (indigo)
+    },
+    font: {
+      color: "#fff", // Optional: Set the font color to white for contrast
+    },
+  };
+
   return (
     <div className="min-h-screen flex text-white">
       <div className="p-6 flex-1 md:ml-[12rem] lg:ml-[12rem]">
@@ -290,12 +304,6 @@ const YourGigsPage = ({ authToken, handleLogout }) => {
 
         <div className="p-6">
           <h1 className="text-3xl font-semibold mb-6">Your Gigs</h1>
-
-
-
-
-                            
-
 
           {loading ? (
             <p className="text-gray-400">Loading your gigs...</p>
@@ -329,6 +337,7 @@ const YourGigsPage = ({ authToken, handleLogout }) => {
                   <div className="text-sm text-yellow-400">
                     Amount: ${job.amount}
                   </div>
+
                   <div className="text-sm text-blue-400">
                     Start Date: {job.startDate}
                   </div>
@@ -570,6 +579,34 @@ const YourGigsPage = ({ authToken, handleLogout }) => {
               ))}
             </div>
           )}
+        </div>
+
+        <div
+          style={{
+            margin: "30px",
+            textAlign: "center",
+          }}
+        >
+          <span
+            style={{
+              fontSize: "24px",
+              fontWeight: "bold",
+              color: "#ffffff",
+              display: "block",
+              marginBottom: "20px",
+            }}
+          >
+            Convert Currency
+          </span>
+          <WormholeConnect
+            config={{
+              chains: ["Ethereum", "Solana"],
+              network: "Testnet",
+            }}
+            theme={{
+              background: { default: "#3f0061" },
+            }}
+          />
         </div>
       </div>
     </div>
