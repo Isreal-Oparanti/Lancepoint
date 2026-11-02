@@ -14,7 +14,7 @@ const app = express();
 dotenv.config();
 
 const mongoURI =
-  // "mongodb+srv://Isreal:oparanti@cluster0.pkhckh1.mongodb.net/LancePoint?retryWrites=true&w=majority&appName=Cluster0";
+ 
 // const mongoURI = "mongodb://localhost:27017/Hackathon"
 
 mongoose
